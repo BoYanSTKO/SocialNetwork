@@ -28,7 +28,7 @@ vector<string> split(string str, char delimiter)
 int main()
 {
 	ifstream f;
-	f.open("/home/omid55/PythonProjects/RecordGenerator/Generated1.txt", ios::in);
+	f.open("./Generated1.txt", ios::in);
 	if(!f) cerr << "File not found" << endl;
 	else
 	{
@@ -36,8 +36,12 @@ int main()
 		{
 			string line;
 			std::getline(f, line);
-			vector<string> words = split(line, ',');
-			// ... TO DO
+			if(line.length() != 0){		// Ignore the last line...
+				vector<string> words = split(line, ',');				
+				//cout << words[0] << endl;
+
+			}	
+			
 		}
 	}
 	return 0;
