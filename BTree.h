@@ -3,6 +3,9 @@
 
 
 
+class B_Tree_Node
+
+
 
 class B_Tree {
   private:
