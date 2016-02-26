@@ -59,7 +59,7 @@ int main()
 	item item1 = {"Jerry1", 2};
 	item item2 = {"Jerry2", 4};
 	item item3 = {"Jerry3", 6};
-	item item4 = {"Jerry4", 8};
+	item item4 = {"Derry4", 8};
 	item item5 = {"Jerry0", 10};
 	BTree bTree(5, 3);
 	bTree.insert(item1);	
@@ -68,5 +68,27 @@ int main()
 	bTree.insert(item2);
 	bTree.insert(item5);
 	bTree.traverse(bTree.getRootNode());
+	
+	item item6 = {"Jerry00", 12};
+	bTree.insert(item6);
+	bTree.traverse(bTree.getRootNode());
+
+	item item7 = {"Jerry23", 22};
+	item item8 = {"Jerry34", 24};
+	item item9 = {"Jerry25", 26};
+	item item10 = {"Jerry27", 27};
+	item item11 = {"Jerry01", 32};
+	item item12 = {"Jerry", 35};
+	bTree.insert(item7);
+	bTree.insert(item8);
+	bTree.insert(item9);
+	bTree.insert(item10);
+	bTree.insert(item11);
+	bTree.insert(item12);
+	bTree.traverse(bTree.getRootNode());
+	// Testing for case 3b-b
+	item item13 = {"Jerry02", 37};
+	bTree.insert(item12);
+
 	return 0;
 }

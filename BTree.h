@@ -40,8 +40,13 @@ class BTree {
   	int m;		// each non-leaf node can have ceil(m/2) to m children (except root: 2 to m children)
   				//   and it can has at most m-1 keys
   	int l;		// each leaf node can contain ceil(l/2) to l items
-// Find the leaf node which the data is about to insert
+	// Find the leaf node which the data is about to insert
   	BTreeNode* getLeafNodeToInsert(item , BTreeNode* node);
+  	// Get the index in the leaf node to insert the value
+  	int getIndexToInsert(BTreeNode* leafNode, string value);
+  	// Find the internal node who is the parent node which the data is about to insert
+	BTreeNode* getInternalNodeToInsert(item data, BTreeNode* node);
+
 
   public:
   	BTree(int m, int l);
@@ -51,6 +56,7 @@ class BTree {
   	void traverse(BTreeNode* node);
   	// Traverse the subtree of node to print out all nodes' values in order
   	BTreeNode* getRootNode();
+  	// Get the root node of the B Tree object
 };
 
 
