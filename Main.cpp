@@ -9,6 +9,11 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <string>
+
+#include "FriendshipGraph.h"
+#include "BTree.h"
+
 using namespace std;
 
 vector<string> split(string str, char delimiter)
@@ -27,6 +32,7 @@ vector<string> split(string str, char delimiter)
 
 int main()
 {
+	/*
 	ifstream f;
 	f.open("./Generated1.txt", ios::in);
 	if(!f) cerr << "File not found" << endl;
@@ -44,5 +50,23 @@ int main()
 			
 		}
 	}
+	*/
+
+	int m = 5;
+	int l = 3;
+
+	// Testing on BTree class
+	item item1 = {"Jerry1", 2};
+	item item2 = {"Jerry2", 4};
+	item item3 = {"Jerry3", 6};
+	item item4 = {"Jerry4", 8};
+	item item5 = {"Jerry0", 10};
+	BTree bTree(5, 3);
+	bTree.insert(item1);	
+	bTree.insert(item3);
+	bTree.insert(item4);
+	bTree.insert(item2);
+	bTree.insert(item5);
+	bTree.traverse(bTree.getRootNode());
 	return 0;
 }
