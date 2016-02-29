@@ -21,11 +21,12 @@ class BTreeNode {
   	int l;		// each leaf node can contain ceil(l/2) to l items
   	bool isLeaf;	// true if node is a leaf, false otherwise
   	BTreeNode* nextNode;	// pointer to the next right node
-
+  	BTreeNode* parentNodePtr;	// pointer to the parent node
 
   public:
   	BTreeNode(int m, int l, bool leaf);
   	//  Constructor: initialize the BTreeNode
+  	~BTreeNode();
 
 
 
@@ -46,6 +47,8 @@ class BTree {
   	int getIndexToInsert(BTreeNode* leafNode, string value);
   	// Find the internal node who is the parent node which the data is about to insert
 	BTreeNode* getInternalNodeToInsert(item data, BTreeNode* node);
+	// Split this internal node into two, (and insert the new node)
+	void splitInternalNode(BTreeNode* node, string name);
 
 
   public:
@@ -57,6 +60,7 @@ class BTree {
   	// Traverse the subtree of node to print out all nodes' values in order
   	BTreeNode* getRootNode();
   	// Get the root node of the B Tree object
+  	~BTree();
 };
 
 

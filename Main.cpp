@@ -38,16 +38,26 @@ int main()
 	if(!f) cerr << "File not found" << endl;
 	else
 	{
-		while(!f.eof())
-		{
-			string line;
-			std::getline(f, line);
-			if(line.length() != 0){		// Ignore the last line...
-				vector<string> words = split(line, ',');				
-				//cout << words[0] << endl;
+		
+		// while(!f.eof())
+		// {
+		// 	string line;
+		// 	std::getline(f, line);
+		// 	if(line.length() != 0){		// Ignore the last line...
+		// 		vector<string> words = split(line, ',');				
+		// 		//cout << words[0] << endl;
 
-			}	
+		// 	}	
 			
+		// }
+		
+
+		string line;
+		while(std::getline(f, line))
+		{
+			vector<string> words = split(line, ',');
+			// ... TO DO ...
+			cout << words[0] << endl;
 		}
 	}
 	*/
@@ -88,7 +98,7 @@ int main()
 	bTree.traverse(bTree.getRootNode());
 	// Testing for case 3b-b
 	item item13 = {"Jerry02", 37};
-	bTree.insert(item12);
+	bTree.insert(item13);
 
 	return 0;
 }
