@@ -351,7 +351,6 @@ BTreeNode* BTree::getLeafNodeToInsert(item data, BTreeNode* node)
 	{
 		return node;
 	}
-    return node;
 }
 
 
@@ -378,7 +377,6 @@ BTreeNode* BTree::getInternalNodeToInsert(item data, BTreeNode* node)
 		return node;
 	}
 	cout << "Wrong use of this function.." << endl;
-    return node;
 }
 
 
@@ -496,23 +494,19 @@ BTreeNode::~BTreeNode()
 			{
 				delete[] keys;
 			}
-			
-
 		}
 		//cout << "44" << endl;
 		
 		if(nextNode != NULL)
 		{
 			nextNode = NULL;
-		}
-		
+		}		
 		//cout << "55" << endl;
 
 		if(parentNodePtr != NULL)
 		{
 			parentNodePtr = NULL;
 		}
-
 		//cout << "66" << endl;
 	}
 	
