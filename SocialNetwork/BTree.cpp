@@ -351,7 +351,8 @@ BTreeNode* BTree::getLeafNodeToInsert(item data, BTreeNode* node)
 	{
 		return node;
 	}
-    return node;
+	cout << "Wrong use of this function.." << endl;
+    	return node;
 }
 
 
@@ -378,7 +379,7 @@ BTreeNode* BTree::getInternalNodeToInsert(item data, BTreeNode* node)
 		return node;
 	}
 	cout << "Wrong use of this function.." << endl;
-    return node;
+	return node;
 }
 
 
