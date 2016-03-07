@@ -291,13 +291,13 @@ void BTree::insert(item data){
 				{
 					cout << "Something is wrong";
 				}
-				cout << "@@@@@@@" << endl;
+
 				// Split the full parent internal node into half
 				BTreeNode*	currentInternalNode = leafNodeToInsert->parentNodePtr;
 				while(currentInternalNode != NULL && currentInternalNode->numKey == this->m-1)
 				// Iterative until parent node is not full or hit the root
 				{
-					cout << "1111" << endl;
+
 					// Revise the parent node (current internal node);
 					//	 insert first half of original children
 					for(int i=1; i<this->m; i++)	// The first child is always kept
@@ -306,16 +306,16 @@ void BTree::insert(item data){
 					}
 					delete[] currentInternalNode->keys;
 					currentInternalNode->keys = new string[m-1];;
-					cout << "111122" << endl;
+
 					for(int i=1; i<(this->m+1)/2; i++)
 					{
-						cout << "11113333" << endl;
+
 						currentInternalNode->children[i] = currentInternalNode->children[i-1]->nextNode;
-						cout << "11114444" << endl;
+
 						currentInternalNode->keys[i-1] = this->getKeyToFill(currentInternalNode, i-1);						
 					}
 					currentInternalNode->numKey = (this->m+1)/2-1;
-					cout << "2222" << endl;
+
 					// Create the new internal node
 					//	 insert second half of the original children
 					BTreeNode* newInternalNode = new BTreeNode(this->m, this->l, false);
@@ -328,11 +328,11 @@ void BTree::insert(item data){
 						newInternalNode->children[i]->parentNodePtr = newInternalNode;
 					}
 					newInternalNode->numKey = (this->m+1)/2-1;					
-					cout << "3333" << endl;
+
 					// Connect original node to the new node and the new node to the following node
 					newInternalNode->nextNode = currentInternalNode->nextNode;
 					currentInternalNode->nextNode = newInternalNode;
-					cout << "4444" << endl;
+
 					if(currentInternalNode->parentNodePtr == NULL) // It is head!
 					{
 						// Create a new internal node as the head node
@@ -372,7 +372,7 @@ void BTree::insert(item data){
 						}
 					}
 					currentInternalNode = currentInternalNode->parentNodePtr;
-					cout << "4444" << endl;
+
 				}
 				cout << name << " (" << data.index << ") is inserted." << endl;
 			}
@@ -574,25 +574,25 @@ BTreeNode::~BTreeNode()
 string BTree::getKeyToFill(BTreeNode* currentInternalNode, int keyIndex)
 {
 	string key = "";
-	cout << "AAAA" << endl;
+
 	BTreeNode*  node = currentInternalNode;
 	if(node != NULL)
 	{
-		cout << "BBBB" << endl;
+
 		node = node->children[keyIndex+1];
 		while(node->isLeaf == false)
 		{
-			cout << "CCCC" << endl;
+
 			node = node->children[0];
 		}
-		cout << "DDDD" << endl;
+
 		key = (node->items[0]).name;
 	}
-	cout << "EEEE" << endl;
+
 	if(key == "")
 	{
 		cout << "Something is wrong." << endl;
 	}
-	cout << "key = " << key << endl;
+	//cout << "key = " << key << endl;
 	return key;
 }
