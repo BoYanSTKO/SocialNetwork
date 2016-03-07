@@ -99,6 +99,9 @@ int main()
 	// Testing for case 3b-b
 	item item13 = {"Jerry02", 37};
 	bTree.insert(item13);
+	bTree.traverse(bTree.getRootNode());
 
+
+	
 	return 0;
 }
