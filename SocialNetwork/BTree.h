@@ -6,7 +6,7 @@
 using namespace std;
 
 
-struct item {
+struct Item {
 	string name;
 	int index;
 };
@@ -15,7 +15,7 @@ class BTreeNode {
   private:
   	string* keys;	// array of keys
   	BTreeNode** children;	// array of pointers to children nodes
-  	item* items;	// array items node
+  	Item* items;	// array items node
   	int numKey;	// current number of keys/items in the node
   	int m;		// each non-leaf node can have ceil(m/2) to m children (except root: 2 to m children)
   				//   and it can has at most m-1 keys
@@ -43,11 +43,11 @@ class BTree {
   				//   and it can has at most m-1 keys
   	int l;		// each leaf node can contain ceil(l/2) to l items
     // Find the leaf node which the data is about to insert
-  	BTreeNode* getLeafNodeToInsert(item , BTreeNode* node);
+  	BTreeNode* getLeafNodeToInsert(Item , BTreeNode* node);
   	// Get the index in the leaf node to insert the value
   	int getIndexToInsert(BTreeNode* leafNode, string value);
   	// Find the internal node who is the parent node which the data is about to insert
-    BTreeNode* getInternalNodeToInsert(item data, BTreeNode* node);
+    BTreeNode* getInternalNodeToInsert(Item data, BTreeNode* node);
     // Split this internal node into two, (and insert the new node)
     void splitInternalNode(BTreeNode* node, string name);
     // Get the key for the currentInternalNode at the index of i (1,2,3...)
@@ -57,7 +57,7 @@ class BTree {
   public:
   	BTree(int m, int l);
   	// Constructor: initialize the BTree
-  	void insert(item data);
+  	void insert(Item data);
   	// Insert the data into the BTree
   	void traverse(BTreeNode* node);
   	// Traverse the subtree of node to print out all nodes' values in order

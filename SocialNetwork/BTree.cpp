@@ -20,7 +20,7 @@ BTreeNode::BTreeNode(int m, int l, bool leaf){
 	{
 		this->keys = NULL;
 		this->children = NULL;
-		this->items = new item[l];
+		this->items = new Item[l];
 	}
 	else				// an internal node
 	{
@@ -40,7 +40,7 @@ BTree::BTree(int m, int l){
 
 
 // Insert the data into the BTree
-void BTree::insert(item data){
+void BTree::insert(Item data){
 	string name = data.name;
 	cout << "inserting... " << name << endl;	
 	
@@ -93,7 +93,7 @@ void BTree::insert(item data){
 			int indexToInsert = getIndexToInsert(itemNode, name);
 
 			// Create a temporary list of items to hold all data including the newly inserted data
-			item* tempItems = new item[this->l + 1];
+			Item* tempItems = new Item[this->l + 1];
 			for(int i=0; i<indexToInsert; i++)
 			{
 				tempItems[i] = itemNode->items[i];
@@ -106,7 +106,7 @@ void BTree::insert(item data){
 
 			// Delete and recreate the original data/leaf node and have the first half data in temporary list inserting into the new data
 			delete[] itemNode->items;
-			itemNode->items = new item[l];
+			itemNode->items = new Item[l];
 			itemNode->numKey = 0;
 			for(int i=0; i< (this->l)/2+1; i++)
 			{
@@ -189,7 +189,7 @@ void BTree::insert(item data){
 				// Find the index of the slot to insert
 				int indexToInsert = getIndexToInsert(leafNodeToInsert, name);
 				// Create a temporary list of items to hold all data including the newly inserted data
-				item* tempItems = new item[this->l + 1];
+				Item* tempItems = new Item[this->l + 1];
 				for(int i=0; i<indexToInsert; i++)
 				{
 					tempItems[i] = leafNodeToInsert->items[i];
@@ -202,7 +202,7 @@ void BTree::insert(item data){
 
 				// Delete and recreate the original data/leaf node and have the first half data in temporary list inserting into the new data
 				delete[] leafNodeToInsert->items;
-				leafNodeToInsert->items = new item[l];
+				leafNodeToInsert->items = new Item[l];
 				leafNodeToInsert->numKey = 0;
 				for(int i=0; i< (this->l)/2+1; i++)
 				{
@@ -250,7 +250,7 @@ void BTree::insert(item data){
 				// Find the index of the slot to insert
 				int indexToInsert = getIndexToInsert(leafNodeToInsert, name);
 				// Create a temporary list of items to hold all data including the newly inserted data
-				item* tempItems = new item[this->l + 1];
+				Item* tempItems = new Item[this->l + 1];
 				for(int i=0; i<indexToInsert; i++)
 				{
 					tempItems[i] = leafNodeToInsert->items[i];
@@ -264,7 +264,7 @@ void BTree::insert(item data){
 				// Delete and recreate the original data/leaf node and have 
 				//    the first half data in temporary list inserting into the new data
 				delete[] leafNodeToInsert->items;
-				leafNodeToInsert->items = new item[l];
+				leafNodeToInsert->items = new Item[l];
 				leafNodeToInsert->numKey = 0;
 				for(int i=0; i< (this->l)/2+1; i++)
 				{
@@ -384,7 +384,7 @@ void BTree::insert(item data){
 
 
 // Find the leaf node which the data is about to insert
-BTreeNode* BTree::getLeafNodeToInsert(item data, BTreeNode* node)
+BTreeNode* BTree::getLeafNodeToInsert(Item data, BTreeNode* node)
 {
 	string name = data.name;
 	if(node != NULL && node->isLeaf != true)
@@ -411,7 +411,7 @@ BTreeNode* BTree::getLeafNodeToInsert(item data, BTreeNode* node)
 
 
 // Find the internal node who is the parent node which the data is about to insert
-BTreeNode* BTree::getInternalNodeToInsert(item data, BTreeNode* node)
+BTreeNode* BTree::getInternalNodeToInsert(Item data, BTreeNode* node)
 {
 	string name = data.name;
 	if(node != NULL && node->isLeaf != true && node->children[0]->isLeaf == false)
@@ -449,7 +449,7 @@ void BTree::traverse(BTreeNode* node)
 	{
 		if(node->isLeaf == true)
 		{	
-			item* tempData = node->items;
+			Item* tempData = node->items;
 			cout << node->numKey << endl;
 			for(int i=0; i< node->numKey; i++)
 			{				
@@ -606,7 +606,7 @@ BTree BTree::createTreeFromMap(map<string, int> nameIndex, int newM, int newL)
 	while(iter != nameIndex.end())
 	{
 		//cout << iter->first << ": " << iter->second << endl;
-		item tempItem = {iter->first, iter->second};
+		Item tempItem = {iter->first, iter->second};
 		newTree.insert(tempItem);
 		iter++;
 	}
