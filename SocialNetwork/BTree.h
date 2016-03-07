@@ -50,7 +50,7 @@ class BTree {
     // Split this internal node into two, (and insert the new node)
     void splitInternalNode(BTreeNode* node, string name);
     // Get the key for the currentInternalNode at the index of i (1,2,3...)
-    string getKeyToFill(BTreeNode* currentInternalNode, int i);
+    string getKeyToFill(BTreeNode* currentInternalNode, int keyIndex);
 
 
   public:
