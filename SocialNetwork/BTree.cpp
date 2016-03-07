@@ -596,3 +596,19 @@ string BTree::getKeyToFill(BTreeNode* currentInternalNode, int keyIndex)
 	//cout << "key = " << key << endl;
 	return key;
 }
+
+
+// Create a B-Tree from map<string, int>; return with a pointer to the B-Tree
+BTree BTree::createTreeFromMap(map<string, int> nameIndex, int newM, int newL)
+{
+	BTree newTree(newM, newL);
+	map<string, int>::iterator iter = nameIndex.begin();
+	while(iter != nameIndex.end())
+	{
+		//cout << iter->first << ": " << iter->second << endl;
+		item tempItem = {iter->first, iter->second};
+		newTree.insert(tempItem);
+		iter++;
+	}
+	return newTree;
+}

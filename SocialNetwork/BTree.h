@@ -2,6 +2,7 @@
 #define SOCIALNETWORK_BTREE_H_
 
 #include <string>
+#include <map>
 using namespace std;
 
 
@@ -63,6 +64,9 @@ class BTree {
   	BTreeNode* getRootNode();
   	// Get the root node of the B Tree object
   	~BTree();
+    // Destructor
+    static BTree createTreeFromMap(map<string, int> nameIndex, int newM, int newL);
+    // Create a B-Tree from map<string, int>; return with a pointer to the B-Tree
 };
 
 

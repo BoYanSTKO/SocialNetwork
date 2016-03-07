@@ -10,6 +10,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <map>
 
 #include "FriendshipGraph.h"
 #include "BTree.h"
@@ -62,6 +63,9 @@ int main()
 	}
 	*/
 
+
+
+	/*
 	int m = 5;
 	int l = 3;
 
@@ -100,8 +104,17 @@ int main()
 	item item13 = {"Jerry02", 37};
 	bTree.insert(item13);
 	bTree.traverse(bTree.getRootNode());
+	*/
 
 
+
+
+	// Testing for createTreeFromMap() function
+	map<string,int> testMap;
+	testMap.insert ( pair<string,int>("kelly",100) );
+	testMap.insert ( pair<string,int>("kelly1",200) );
+	BTree theTree = BTree::createTreeFromMap(testMap, 5, 3);
+	theTree.traverse(theTree.getRootNode());
 	
 	return 0;
 }
