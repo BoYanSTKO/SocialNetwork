@@ -33,6 +33,81 @@ vector<string> split(string str, char delimiter)
 
 int main()
 {
+    try
+    {
+        FriendshipGraph g;
+        while(true)
+        {
+            string str;
+            cin >> str;
+            if(cin.eof())
+            {
+                break;
+            }
+            if(str.compare("exit") == 0)
+            {
+                break;
+            }
+            else if(str.compare("addFriendship") == 0)
+            {
+                string name1;
+                string name2;
+                cin >> name1 >> name2;
+                g.addFriendship(name1, name2);
+            }
+            else if(str.compare("doublehashing") == 0)
+            {
+                
+            }
+            else if(str.compare("insert") == 0)
+            {
+                string name;
+                string friendString;
+                string delimiter = ",";
+                string* friendList;
+                int pos = 0;
+                int cnt = 0;
+                
+                cin >> name >> friendString;
+                // check friends num
+                int friendNum = (int)count(friendString.begin(), friendString.end(), ',') + 1;
+                
+                friendList = new string[friendNum]();
+                //remove quotes from string
+                friendString.erase(remove(friendString.begin(), friendString.end(), '"'), friendString.end());
+                while ((pos = (int)friendString.find(delimiter)) != string::npos) {
+                    friendList[cnt] = friendString.substr(0, pos);
+                    friendString.erase(0, pos + delimiter.length());
+                    cnt++;
+                }
+                friendList[cnt] = friendString;
+//                cout << friendNum << endl;
+                g.insert(name, friendList, friendNum, 1);
+                cout << name << "," << friendString << endl;
+//                cout << "here" << endl;
+            }
+            else if(str.compare("lookup") == 0)
+            {
+            }
+            else if(str.compare("delete") == 0)
+            {
+            }
+            else if(str.compare("print") == 0)
+            {
+                g.printAll();
+            }
+            else
+            {
+                cin.clear();
+                cout << "Inputed string format was incorrect" << endl;
+            }
+        }
+    }
+    catch(exception& ex)
+    {
+        cerr << ex.what() << endl;
+    }
+    
 	/*
 	ifstream f;
 	f.open("./Generated1.txt", ios::in);
@@ -110,11 +185,11 @@ int main()
 
 
 	// Testing for createTreeFromMap() function
-	map<string,int> testMap;
-	testMap.insert ( pair<string,int>("kelly",100) );
-	testMap.insert ( pair<string,int>("kelly1",200) );
-	BTree theTree = BTree::createTreeFromMap(testMap, 5, 3);
-	theTree.traverse(theTree.getRootNode());
+//	map<string,int> testMap;
+//	testMap.insert ( pair<string,int>("kelly",100) );
+//	testMap.insert ( pair<string,int>("kelly1",200) );
+//	BTree theTree = BTree::createTreeFromMap(testMap, 5, 3);
+//	theTree.traverse(theTree.getRootNode());
 	
 	return 0;
 }
