@@ -67,6 +67,9 @@ class BTree {
     // Destructor
     static BTree createTreeFromMap(map<string, int> nameIndex, int newM, int newL);
     // Create a B-Tree from map<string, int>; return with a pointer to the B-Tree
+    map<string, int> rangeSearchQuery(string name1, string name2, BTreeNode* node);
+    // Retrive a map of name and index of all people whose name is between name1 and name2
+
 };
 
 
