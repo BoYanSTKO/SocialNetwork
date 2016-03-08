@@ -11,11 +11,20 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <stdio.h>
+#include <stdlib.h> 
+#include <cstring>
 
 #include "FriendshipGraph.h"
 #include "BTree.h"
 
+#define PROFILE_DATA_PATH "./ProfileData.txt"
+
 using namespace std;
+
+char* stringToCharArray(string &string);
+map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<string>& ages, vector<string>& occupations);
+
 
 vector<string> split(string str, char delimiter)
 {
@@ -139,6 +148,42 @@ int main()
 	*/
 
 
+	// Test generateProfileDataFromVectors
+	vector<string> nameList;
+	vector<string> ageList;
+	vector<string> occupationList;
+	vector< vector<string> > frindsList;
+
+	ifstream f;
+	f.open("./Generated1.txt", ios::in);
+	if(!f) cerr << "File not found" << endl;
+	else
+	{
+		string line;
+		while(std::getline(f, line))
+		{
+			vector<string> words = split(line, ',');
+			
+			nameList.push_back(words[0]);
+			//ageList.push_back(atoi( words[1].c_str()));
+			ageList.push_back(words[1]);
+			occupationList.push_back(words[2]);
+			vector<string> tempFrinds;
+			for(int i=3; i<words.size(); i++)
+			{
+				tempFrinds.push_back(words[i]);
+			}
+			frindsList.push_back(tempFrinds);
+		}
+	}
+
+	map<string, int> nameIndex = generateProfileDataFromVectors(nameList, ageList, occupationList);
+	map<string, int>::iterator iter;
+	for(iter=nameIndex.begin(); iter!=nameIndex.end(); iter++)
+	{
+		cout << iter->first << " (" << iter->second << ")" << endl;
+	}
+
 
 	/*
 	int m = 5;
@@ -192,4 +237,77 @@ int main()
 //	theTree.traverse(theTree.getRootNode());
 	
 	return 0;
+}
+
+
+
+// Generate the profile Data file on the disk from three vectors
+//	 return with a map of names along with corresponding entry(index) in the 
+//   Profile Data file
+map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<string>& ages, vector<string>& occupations)
+{
+	// Double check the size of the 3 input files, making sure they are of same size
+	if(names.size() != ages.size() || names.size() != occupations.size())
+	{
+		cout << "Error: size is different for the three input vectors.." << endl;
+	}
+
+	map<string, int> nameIndex;
+	//cout << "1111" << endl;
+	FILE* pFile;
+	pFile = fopen (PROFILE_DATA_PATH, "w");
+	for(int i=0; i<names.size(); i++)
+	{
+		//cout << "2222" << endl;
+		int tempIndexToInsert = 53*i;
+		fseek(pFile, tempIndexToInsert, SEEK_SET);
+
+		string tempString = names.at(i);
+		//cout << tempString << endl;
+		char* tempName = stringToCharArray(tempString);
+		
+		fputs(tempName, pFile);
+		//cout << tempName << endl;
+		delete[] tempName;
+		
+		nameIndex.insert(pair<string, int>(tempString, tempIndexToInsert));
+		
+
+		tempIndexToInsert = tempIndexToInsert+20;
+		fseek(pFile, tempIndexToInsert, SEEK_SET);
+		tempString = ages.at(i);
+		//cout << tempString << endl;
+		char* tempAge = stringToCharArray(tempString);
+		
+		fputs(tempAge, pFile);
+		//cout << tempAge << endl;
+		delete[] tempAge;
+			
+
+		tempIndexToInsert = tempIndexToInsert+3;
+		fseek(pFile, tempIndexToInsert, SEEK_SET);
+		tempString=occupations[i];
+		//cout << tempString << endl;
+		char* tempOccupation = stringToCharArray(tempString);
+		fputs(tempOccupation, pFile);
+		//cout << tempOccupation << endl;
+		delete[] tempOccupation;		
+	}
+	fclose ( pFile );
+	//cout << "3333" << endl;
+	return nameIndex;
+}
+
+
+// Convert string to char array
+char* stringToCharArray(string& string)
+{
+	//cout << "~~~~" << endl;
+	//cout << string.c_str() << ": " << string.length()	 << endl;
+	char* charArray = new char[string.length()];
+	strncpy(charArray, string.c_str(), string.length());
+	//cout << sizeof(charArray) << endl;
+	charArray[string.length()] = 0;
+	//cout << charArray << endl;
+	return charArray;
 }
