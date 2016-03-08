@@ -612,3 +612,65 @@ BTree BTree::createTreeFromMap(map<string, int> nameIndex, int newM, int newL)
 	}
 	return newTree;
 }
+
+
+// Retrive a map of name and index of all people whose name is between name1 and name2
+map<string, int> BTree::rangeSearchQuery(string name1, string name2, BTreeNode* node)
+{
+	map<string, int> resultMap;
+	string lowerName;
+	string upperName;
+	if(name1 > name2)
+	{
+		lowerName = name2;
+		upperName = name1;
+	}
+	else
+	{
+		lowerName = name1;
+		upperName = name2;
+	}
+
+	if(node != NULL)
+	{
+		if(node->isLeaf == true)
+		{
+			for(int i=0; i<node->numKey; i++)
+			{
+				if((node->items[i]).name >= lowerName 
+					&& (node->items[i]).name <= upperName)
+				{
+					resultMap.insert( pair<string,int>((node->items[i]).name, (node->items[i]).index) );
+				}
+			}
+		}
+		else
+		{
+			if(lowerName <= node->keys[0])
+			{
+				map<string, int> tempMap;
+				tempMap= rangeSearchQuery(lowerName, upperName, node->children[0]);
+				if(tempMap.size() > 0)
+				{
+					resultMap.insert(tempMap.begin(), tempMap.end());
+				}
+			}
+			for(int i=0; i<node->numKey-1; i++)
+			{
+				if(upperName >= node->keys[i])
+				{
+					map<string, int> tempMap;
+					tempMap = rangeSearchQuery(lowerName, upperName, node->children[i+1]);
+					if(tempMap.size() > 0)
+					{
+						resultMap.insert(tempMap.begin(), tempMap.end());
+					}
+				}
+			}
+		}
+	}
+
+
+	return resultMap;
+}
+
