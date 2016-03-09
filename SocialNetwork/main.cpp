@@ -244,6 +244,64 @@ int main()
 // Generate the profile Data file on the disk from three vectors
 //	 return with a map of names along with corresponding entry(index) in the 
 //   Profile Data file
+// map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<string>& ages, vector<string>& occupations)
+// {
+// 	// Double check the size of the 3 input files, making sure they are of same size
+// 	if(names.size() != ages.size() || names.size() != occupations.size())
+// 	{
+// 		cout << "Error: size is different for the three input vectors.." << endl;
+// 	}
+
+// 	map<string, int> nameIndex;
+	
+// 	FILE* pFile;
+// 	pFile = fopen (PROFILE_DATA_PATH, "w");
+// 	for(int i=0; i<names.size(); i++)
+// 	{
+// 		cout << "2222" << endl;
+// 		int tempIndexToInsert = 53*i;
+// 		fseek(pFile, tempIndexToInsert, SEEK_SET);
+
+// 		string tempString = names.at(i);
+// 		cout << "22223333" << endl;
+// 		char* tempName = stringToCharArray(tempString);
+// 		cout << "3333" << endl;
+// 		fputs(tempName, pFile);
+// 		cout << tempName << endl;
+// 		delete[] tempName;
+// 		cout << "4444" << endl;
+// 		nameIndex.insert(pair<string, int>(tempString, tempIndexToInsert));
+		
+
+// 		tempIndexToInsert = tempIndexToInsert+20;
+// 		fseek(pFile, tempIndexToInsert, SEEK_SET);
+// 		tempString = ages.at(i);
+// 		//cout << tempString << endl;
+// 		char* tempAge = stringToCharArray(tempString);
+		
+// 		fputs(tempAge, pFile);
+// 		cout << tempAge << endl;
+// 		delete[] tempAge;
+			
+
+// 		tempIndexToInsert = tempIndexToInsert+3;
+// 		fseek(pFile, tempIndexToInsert, SEEK_SET);
+// 		tempString=occupations[i];
+// 		//cout << tempString << endl;
+// 		char* tempOccupation = stringToCharArray(tempString);
+// 		fputs(tempOccupation, pFile);
+// 		cout << tempOccupation << endl;
+// 		delete[] tempOccupation;		
+// 	}
+// 	fclose ( pFile );
+// 	//cout << "3333" << endl;
+// 	return nameIndex;
+// }
+
+
+// Generate the profile Data file on the disk from three vectors
+//	 return with a map of names along with corresponding entry(index) in the 
+//   Profile Data file
 map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<string>& ages, vector<string>& occupations)
 {
 	// Double check the size of the 3 input files, making sure they are of same size
@@ -253,61 +311,49 @@ map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<st
 	}
 
 	map<string, int> nameIndex;
-	//cout << "1111" << endl;
-	FILE* pFile;
-	pFile = fopen (PROFILE_DATA_PATH, "w");
+	
+	// FILE* pFile;
+	// pFile = fopen (PROFILE_DATA_PATH, "w");
+	ofstream pFile;
+	pFile.open(PROFILE_DATA_PATH);
+	long initPos = pFile.tellp();
 	for(int i=0; i<names.size(); i++)
 	{
-		//cout << "2222" << endl;
 		int tempIndexToInsert = 53*i;
-		fseek(pFile, tempIndexToInsert, SEEK_SET);
-
+		pFile.seekp(initPos + tempIndexToInsert);
 		string tempString = names.at(i);
-		//cout << tempString << endl;
-		char* tempName = stringToCharArray(tempString);
-		
-		fputs(tempName, pFile);
-		//cout << tempName << endl;
-		delete[] tempName;
-		
+		pFile << tempString;
+
 		nameIndex.insert(pair<string, int>(tempString, tempIndexToInsert));
 		
-
-		tempIndexToInsert = tempIndexToInsert+20;
-		fseek(pFile, tempIndexToInsert, SEEK_SET);
-		tempString = ages.at(i);
-		//cout << tempString << endl;
-		char* tempAge = stringToCharArray(tempString);
 		
-		fputs(tempAge, pFile);
-		//cout << tempAge << endl;
-		delete[] tempAge;
-			
+		tempIndexToInsert = tempIndexToInsert+20;
+		pFile.seekp(initPos + tempIndexToInsert);
+		tempString = ages.at(i);
+		pFile << tempString;
+
 
 		tempIndexToInsert = tempIndexToInsert+3;
-		fseek(pFile, tempIndexToInsert, SEEK_SET);
-		tempString=occupations[i];
-		//cout << tempString << endl;
-		char* tempOccupation = stringToCharArray(tempString);
-		fputs(tempOccupation, pFile);
-		//cout << tempOccupation << endl;
-		delete[] tempOccupation;		
+		pFile.seekp(initPos + tempIndexToInsert);
+		tempString=occupations.at(i);
+		pFile << tempString;				
 	}
-	fclose ( pFile );
-	//cout << "3333" << endl;
+	pFile.close();
+
 	return nameIndex;
 }
 
 
+
 // Convert string to char array
-char* stringToCharArray(string& string)
-{
-	//cout << "~~~~" << endl;
-	//cout << string.c_str() << ": " << string.length()	 << endl;
-	char* charArray = new char[string.length()];
-	strncpy(charArray, string.c_str(), string.length());
-	//cout << sizeof(charArray) << endl;
-	charArray[string.length()] = 0;
-	//cout << charArray << endl;
-	return charArray;
-}
+// char* stringToCharArray(string& string)
+// {
+// 	//cout << "~~~~" << endl;
+// 	//cout << string.c_str() << ": " << string.length()	 << endl;
+// 	char* charArray = new char[string.length()];
+// 	strncpy(charArray, string.c_str(), string.length());
+// 	cout << string.length() << endl;
+// 	charArray[string.length()] = '\0';
+// 	cout << charArray << endl;
+// 	return charArray;
+// }
