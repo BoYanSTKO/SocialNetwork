@@ -5,7 +5,7 @@
 #include <iostream>
 #include "BTree.h"
 #define GRAPH_SIZE 201  // default graph size
-#define REMOVE_INDICATOR "~~"
+//#define REMOVE_INDICATOR "~~"
 
 class GraphNode {
     string name; // name is the key

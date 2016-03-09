@@ -42,80 +42,80 @@ vector<string> split(string str, char delimiter)
 
 int main()
 {
-    try
-    {
-        FriendshipGraph g;
-        while(true)
-        {
-            string str;
-            cin >> str;
-            if(cin.eof())
-            {
-                break;
-            }
-            if(str.compare("exit") == 0)
-            {
-                break;
-            }
-            else if(str.compare("addFriendship") == 0)
-            {
-                string name1;
-                string name2;
-                cin >> name1 >> name2;
-                g.addFriendship(name1, name2);
-            }
-            else if(str.compare("doublehashing") == 0)
-            {
-                
-            }
-            else if(str.compare("insert") == 0)
-            {
-                string name;
-                string friendString;
-                string delimiter = ",";
-                string* friendList;
-                int pos = 0;
-                int cnt = 0;
-                
-                cin >> name >> friendString;
-                // check friends num
-                int friendNum = (int)count(friendString.begin(), friendString.end(), ',') + 1;
-                
-                friendList = new string[friendNum]();
-                //remove quotes from string
-                friendString.erase(remove(friendString.begin(), friendString.end(), '"'), friendString.end());
-                while ((pos = (int)friendString.find(delimiter)) != string::npos) {
-                    friendList[cnt] = friendString.substr(0, pos);
-                    friendString.erase(0, pos + delimiter.length());
-                    cnt++;
-                }
-                friendList[cnt] = friendString;
-//                cout << friendNum << endl;
-                g.insert(name, friendList, friendNum, 1);
-                cout << name << "," << friendString << endl;
-//                cout << "here" << endl;
-            }
-            else if(str.compare("lookup") == 0)
-            {
-            }
-            else if(str.compare("delete") == 0)
-            {
-            }
-            else if(str.compare("print") == 0)
-            {
-                g.printAll();
-            }
-            else
-            {
-                cin.clear();
-                cout << "Inputed string format was incorrect" << endl;
-            }
-        }
-    }
-    catch(exception& ex)
-    {
-        cerr << ex.what() << endl;
-    }
+//    try
+//    {
+//        FriendshipGraph g;
+//        while(true)
+//        {
+//            string str;
+//            cin >> str;
+//            if(cin.eof())
+//            {
+//                break;
+//            }
+//            if(str.compare("exit") == 0)
+//            {
+//                break;
+//            }
+//            else if(str.compare("addFriendship") == 0)
+//            {
+//                string name1;
+//                string name2;
+//                cin >> name1 >> name2;
+//                g.addFriendship(name1, name2);
+//            }
+//            else if(str.compare("doublehashing") == 0)
+//            {
+//                
+//            }
+//            else if(str.compare("insert") == 0)
+//            {
+//                string name;
+//                string friendString;
+//                string delimiter = ",";
+//                string* friendList;
+//                int pos = 0;
+//                int cnt = 0;
+//                
+//                cin >> name >> friendString;
+//                // check friends num
+//                int friendNum = (int)count(friendString.begin(), friendString.end(), ',') + 1;
+//                
+//                friendList = new string[friendNum]();
+//                //remove quotes from string
+//                friendString.erase(remove(friendString.begin(), friendString.end(), '"'), friendString.end());
+//                while ((pos = (int)friendString.find(delimiter)) != string::npos) {
+//                    friendList[cnt] = friendString.substr(0, pos);
+//                    friendString.erase(0, pos + delimiter.length());
+//                    cnt++;
+//                }
+//                friendList[cnt] = friendString;
+////                cout << friendNum << endl;
+//                g.insert(name, friendList, friendNum, 1);
+//                cout << name << "," << friendString << endl;
+////                cout << "here" << endl;
+//            }
+//            else if(str.compare("lookup") == 0)
+//            {
+//            }
+//            else if(str.compare("delete") == 0)
+//            {
+//            }
+//            else if(str.compare("print") == 0)
+//            {
+//                g.printAll();
+//            }
+//            else
+//            {
+//                cin.clear();
+//                cout << "Inputed string format was incorrect" << endl;
+//            }
+//        }
+//    }
+//    catch(exception& ex)
+//    {
+//        cerr << ex.what() << endl;
+//    }
     
 	/*
 	ifstream f;
@@ -152,10 +152,10 @@ int main()
 	vector<string> nameList;
 	vector<string> ageList;
 	vector<string> occupationList;
-	vector< vector<string> > frindsList;
+	vector< vector<string> > friendsList;
 
 	ifstream f;
-	f.open("./Generated1.txt", ios::in);
+	f.open("/Users/boyan/Dropbox/UCSB_Class/CS130A/PJ3/SocialNetwork/SocialNetwork/Generated1.txt", ios::in);
 	if(!f) cerr << "File not found" << endl;
 	else
 	{
@@ -173,16 +173,48 @@ int main()
 			{
 				tempFrinds.push_back(words[i]);
 			}
-			frindsList.push_back(tempFrinds);
+			friendsList.push_back(tempFrinds);
 		}
 	}
+    
+//    for (int i = 0; i < friendsList.size(); i++) {
+//        string tmp = "";
+//        for (int j = 0; j < friendsList.at(i).size(); j++) {
+//            if (j != friendsList.at(i).size()-1) {
+//                tmp = tmp + friendsList.at(i).at(j) + ",";
+//            }
+//            else {
+//                tmp = tmp + friendsList.at(i).at(j);
+//            }
+//        }
+//        cout << nameList.at(i) << "," << ageList.at(i) << "," << tmp << endl;
+//    }
 
 	map<string, int> nameIndex = generateProfileDataFromVectors(nameList, ageList, occupationList);
-	map<string, int>::iterator iter;
-	for(iter=nameIndex.begin(); iter!=nameIndex.end(); iter++)
-	{
-		cout << iter->first << " (" << iter->second << ")" << endl;
-	}
+    
+    FriendshipGraph g;
+    for (int i=0; i < nameIndex.size(); i++) {
+        string* friendNameList = new string[friendsList.at(i).size()];
+        for (int j = 0; j < friendsList.at(i).size(); j++) {
+            friendNameList[j] = friendsList.at(i).at(j);
+        }
+        g.insert(nameList.at(i), friendNameList, (int) friendsList.at(i).size(), nameIndex[nameList[i]]);
+        
+        delete [] friendNameList;
+        friendNameList = NULL;
+    }
+    
+    g.printAll();
+    
+    
+    
+    
+    
+//	map<string, int>::iterator iter;
+//	for(iter=nameIndex.begin(); iter!=nameIndex.end(); iter++)
+//	{
+//		cout << iter->first << " (" << iter->second << ")" << endl;
+//	}
 
 
 	/*

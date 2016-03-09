@@ -30,7 +30,7 @@ int GraphNode::getIndex() {
 }
 
 GraphNode::~GraphNode() {
-    delete friendNameList;
+    delete [] friendNameList;
 }
 
 
@@ -45,7 +45,7 @@ FriendshipGraph::FriendshipGraph(){
 }
 
 FriendshipGraph::~FriendshipGraph() {
-    for (int i = 0; i < (this->nodeNum); i++) {
+    for (int i = 0; i < GRAPH_SIZE; i++) {
         delete nodes[i];
     }
     delete [] nodes;
@@ -75,13 +75,13 @@ bool FriendshipGraph::insert(string name, string* friends, int friendNum, int in
     int hash = hashFun(name);
     // linear probing
     while (nodes[hash] != NULL) {
-        if (nodes[hash]->getName() == REMOVE_INDICATOR) {
-            // to do
-            // do something here to remove user
-            // then add new user
-            cout << "User successfully added!" << endl;
-            return true;
-        }
+//        if (nodes[hash]->getName() == REMOVE_INDICATOR) {
+//            // to do
+//            // do something here to remove user
+//            // then add new user
+//            cout << "User successfully added!" << endl;
+//            return true;
+//        }
         hash = linearProbing(hash);
     }
     // insert user
@@ -92,6 +92,8 @@ bool FriendshipGraph::insert(string name, string* friends, int friendNum, int in
 //    nodes[hash]->indicator = OCCUPY_INDICATOR;
     
     cout << "User successfully added!" << endl;
+    cout << nodes[hash]->getName() << endl;
+
     
     return true;
     
