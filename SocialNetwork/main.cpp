@@ -24,6 +24,7 @@ using namespace std;
 
 //char* stringToCharArray(string &string);
 map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<string>& ages, vector<string>& occupations);
+void printInfoFromProfileData(int index, string profileDataPath);
 
 
 vector<string> split(string str, char delimiter)
@@ -376,6 +377,61 @@ map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<st
 }
 
 
+// Print the name, age, and occupation of a person who is record at the index of
+//	 index in the file at profileDataPath
+void printInfoFromProfileData(int index, string profileDataPath)
+{
+	ifstream f;
+	f.open(profileDataPath.c_str(), ios::in);
+	if(!f) cerr << "Profile Data file not found" << endl;
+	else
+	{
+		string line;
+		while(std::getline(f, line))
+		{
+			f.seekg (0, ios_base::end);
+	    		int length = f.tellg();
+	    		if(index >= length)
+	    		{
+	    			cout << "Error: The input index is out of the size of the file" << endl;
+	    		}
+	    		else
+	    		{
+				f.seekg(index, ios_base::beg);
+				//int startIndex = f.tellg();
+
+				char* buffer = new char[20];
+				f.read(buffer, 20);
+				string tempName(buffer);
+
+				
+				f.seekg(index+20);
+				buffer = new char[3];
+				f.read(buffer, 3);
+				string tempAge(buffer);
+
+				f.seekg(index+23);
+				buffer = new char[30];
+				f.read(buffer, 30);
+				string tempOccupation(buffer);
+
+				f.close();
+				if(tempName.length() <= 0)
+				{
+					cout << "Error: No character at the index of the file" << endl;
+				}
+				else
+				{
+					cout << tempName << "\t" << tempAge << "\t" << tempOccupation << endl;
+				}
+				
+
+				delete[] buffer;
+
+    			}			
+		}
+	}
+}
 
 // Convert string to char array
 // char* stringToCharArray(string& string)
