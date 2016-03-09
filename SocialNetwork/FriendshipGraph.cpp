@@ -91,8 +91,8 @@ bool FriendshipGraph::insert(string name, string* friends, int friendNum, int in
     // change indicator
 //    nodes[hash]->indicator = OCCUPY_INDICATOR;
     
-    cout << "User successfully added!" << endl;
-    cout << nodes[hash]->getName() << endl;
+    cout << "User " << nodes[hash]->getName() << " successfully added!" << endl;
+//    cout << nodes[hash]->getName() << endl;
 
     
     return true;
