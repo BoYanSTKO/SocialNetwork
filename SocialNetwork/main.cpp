@@ -22,7 +22,7 @@
 
 using namespace std;
 
-char* stringToCharArray(string &string);
+//char* stringToCharArray(string &string);
 map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<string>& ages, vector<string>& occupations);
 
 
