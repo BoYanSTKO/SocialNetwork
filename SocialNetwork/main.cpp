@@ -25,6 +25,7 @@ using namespace std;
 //char* stringToCharArray(string &string);
 map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<string>& ages, vector<string>& occupations);
 void printInfoFromProfileData(int index, string profileDataPath);
+void printInfoListInNameRange(BTree& bTree, string name1, string name2);
 
 
 vector<string> split(string str, char delimiter)
@@ -390,25 +391,26 @@ void printInfoFromProfileData(int index, string profileDataPath)
 		while(std::getline(f, line))
 		{
 			f.seekg (0, ios_base::end);
-	    		int length = f.tellg();
-	    		if(index >= length)
-	    		{
-	    			cout << "Error: The input index is out of the size of the file" << endl;
-	    		}
-	    		else
-	    		{
+    		int length = f.tellg();
+    		if(index >= length)
+    		{
+    			cout << "Error: The input index is out of the size of the file" << endl;
+    		}
+    		else
+    		{
 				f.seekg(index, ios_base::beg);
 				//int startIndex = f.tellg();
 
 				char* buffer = new char[20];
 				f.read(buffer, 20);
 				string tempName(buffer);
-
+				delete[] buffer; 
 				
 				f.seekg(index+20);
 				buffer = new char[3];
 				f.read(buffer, 3);
 				string tempAge(buffer);
+				delete[] buffer; 
 
 				f.seekg(index+23);
 				buffer = new char[30];
@@ -428,10 +430,32 @@ void printInfoFromProfileData(int index, string profileDataPath)
 
 				delete[] buffer;
 
-    			}			
+    		}
+
+			
+			
 		}
 	}
 }
+
+
+// List all users' information with names between name1 and name2
+void printInfoListInNameRange(BTree& bTree, string name1, string name2)
+{
+	if(bTree.getRootNode() != NULL)
+	{
+		cout << "The info of users with names between \"" << name1 << "\" and \"" << name2 << "\":" << endl;
+		map<string, int> nameIndexList = bTree.rangeSearchQuery(name1, name2, bTree.getRootNode());
+		map<string, int>::iterator iterQ = nameIndexList.begin();
+		for(int i=0; i<nameIndexList.size(); i++, iterQ++)
+		{
+			printInfoFromProfileData(iterQ->second, PROFILE_DATA_PATH);
+			//cout << iterQ->first << " (" << iterQ->second << ")" << endl;
+		}
+		cout << endl;
+	}
+}
+
 
 // Convert string to char array
 // char* stringToCharArray(string& string)
