@@ -42,7 +42,7 @@ BTree::BTree(int m, int l){
 // Insert the data into the BTree
 void BTree::insert(Item data){
 	string name = data.name;
-	cout << "inserting... " << name << endl;	
+	//cout << "inserting... " << name << endl;	
 	
 	// Case 1: No data yet...
 	if(this->root == NULL)
@@ -60,7 +60,7 @@ void BTree::insert(Item data){
 
 		// Pointing root to the new node
 		this->root = newInternalNode;
-		cout << data.name << " (" << data.index << ") is inserted in a new node." << endl;
+		//cout << data.name << " (" << data.index << ") is inserted in a new node." << endl;
 	}
 	// Case 2: There is only one item/leaf node
 	else if(this->root->numKey == 0)	
@@ -71,6 +71,12 @@ void BTree::insert(Item data){
 		if(itemNode->numKey < this->l)	
 		{
 			int indexToInsert = getIndexToInsert(itemNode, name);
+			if(indexToInsert == -1)	// Duplicate insertion
+			{
+				cout << "The inserted entry" << name << " has already been in the tree" << endl;
+				return;
+			}
+
 			// Push back data larger than the inserting item to have a space for the inserting data item
 			for(int i=itemNode->numKey-1; i >= indexToInsert; i--)
 			{
@@ -79,18 +85,23 @@ void BTree::insert(Item data){
 			// Insert the data item
 			itemNode->items[indexToInsert] = data;
 			itemNode->numKey++;
-			cout << name << " (" << data.index << ") is inserted." << endl;
+			//cout << name << " (" << data.index << ") is inserted." << endl;
 		}
 		// Case 2b: The data node is full (numKey = l); another leaf node has to be created
 		else
 		{
-			cout << "The leaf node is already full!" << endl;
+			//cout << "The leaf node is already full!" << endl;
 			if(itemNode->numKey != this->l)
 			{
 				cout << "The counter is wrong..." << endl;
 			}
 
 			int indexToInsert = getIndexToInsert(itemNode, name);
+			if(indexToInsert == -1)	// Duplicate insertion
+			{
+				cout << "The inserted entry" << name << " has already been in the tree" << endl;
+				return;
+			}
 
 			// Create a temporary list of items to hold all data including the newly inserted data
 			Item* tempItems = new Item[this->l + 1];
@@ -137,13 +148,13 @@ void BTree::insert(Item data){
 			this->root->children[1] = newLeafNode;
 			this->root->numKey++;
 			//cout << "root node: " << this->root->numKey << " children" << endl;
-			cout << data.name << " (" << data.index << ") is inserted...after a new leaf node is created" << endl;
+			//cout << data.name << " (" << data.index << ") is inserted...after a new leaf node is created" << endl;
 		}
 	}
 	// Case 3: Nomal condition (after initilization)
 	else
 	{
-		cout << "In case 3..." << endl;
+		//cout << "In case 3..." << endl;
 		// Find the leaf node to insert the data
 		BTreeNode* leafNodeToInsert = this->getLeafNodeToInsert(data, this->root);
 		//cout << nodeToInsert->items[0].name << endl;
@@ -156,9 +167,14 @@ void BTree::insert(Item data){
 		// Case 3a: leaf node to insert is not full
 		if(leafNodeToInsert->numKey < this->l)
 		{
-			cout << "case 3a" << endl;
+			//cout << "case 3a" << endl;
 
 			int indexToInsert = getIndexToInsert(leafNodeToInsert, name);
+			if(indexToInsert == -1)	// Duplicate insertion
+			{
+				cout << "The inserted entry" << name << " has already been in the tree" << endl;
+				return;
+			}
 
 			// Push back data larger than the inserting item to have a space for the inserting data item
 			for(int i=leafNodeToInsert->numKey-1; i >= indexToInsert; i--)
@@ -169,25 +185,30 @@ void BTree::insert(Item data){
 			leafNodeToInsert->items[indexToInsert] = data;
 			leafNodeToInsert->numKey++;			
 
-			cout << name << " (" << data.index << ") is inserted." << endl;
+			//cout << name << " (" << data.index << ") is inserted." << endl;
 		}
 		// Case 3b: leaf node to insert is full --> leaf node is going to split
 		else
 		{
-			cout << "case 3b" << endl;
-			//BTreeNode* parentNode = getInternalNodeToInsert(data, this->root);
+			//cout << "case 3b" << endl;
+
 			BTreeNode* parentNode = leafNodeToInsert->parentNodePtr;
 
 			// Case 3b-a: Parent node has less than 4 keys: still have slot to hold extra leaf node
 			if(parentNode->numKey < this->m-1)
 			{
-				cout << "case 3b-a" << endl;
+				//cout << "case 3b-a" << endl;
 				if(leafNodeToInsert->numKey != this->l)
 				{
 					cout << "The counter is wrong..." << endl;
 				}
 				// Find the index of the slot to insert
 				int indexToInsert = getIndexToInsert(leafNodeToInsert, name);
+				if(indexToInsert == -1)	// Duplicate insertion
+				{
+					cout << "The inserted entry" << name << " has already been in the tree" << endl;
+					return;
+				}
 				// Create a temporary list of items to hold all data including the newly inserted data
 				Item* tempItems = new Item[this->l + 1];
 				for(int i=0; i<indexToInsert; i++)
@@ -228,7 +249,7 @@ void BTree::insert(Item data){
 				//   re-arrange the keys and children
 				int tempIndex = 0;
 				//	 the first children pointer does not neet to change
-				cout << parentNode->numKey << endl;
+				//cout << parentNode->numKey << endl;
 				while(tempIndex< parentNode->numKey)
 				{
 					parentNode->children[tempIndex+1] = parentNode->children[tempIndex]->nextNode;
@@ -236,19 +257,27 @@ void BTree::insert(Item data){
 					tempIndex++;
 				}
 
-				cout << name << " (" << data.index << ") is inserted." << endl;
+				//cout << name << " (" << data.index << ") is inserted." << endl;
 			}
 			// Case 3b-b: Parent node has 4 keys: it is full... the parent node has to be split
 			else
 			{
-				cout << "case 3b-b" << endl;
+				//cout << "case 3b-b" << endl;
 				// Double check
 				if(leafNodeToInsert->numKey != this->l)
 				{
 					cout << "The counter is wrong..." << endl;
+					cout << "case 3b-b" << endl;
+					cout << "leafNodeNum: " << leafNodeToInsert->numKey << " l: " << this->l << endl;
 				}
 				// Find the index of the slot to insert
 				int indexToInsert = getIndexToInsert(leafNodeToInsert, name);
+				if(indexToInsert == -1)	// Duplicate insertion
+				{
+					cout << "The inserted entry" << name << " has already been in the tree" << endl;
+					return;
+				}
+
 				// Create a temporary list of items to hold all data including the newly inserted data
 				Item* tempItems = new Item[this->l + 1];
 				for(int i=0; i<indexToInsert; i++)
@@ -290,6 +319,9 @@ void BTree::insert(Item data){
 				if(leafNodeToInsert->parentNodePtr->numKey != this->m-1)
 				{
 					cout << "Something is wrong";
+					cout << "case 3b-b" << endl;
+					cout << "parentNodeNum: " << leafNodeToInsert->parentNodePtr->numKey << " m-1: " << this->l-1 << endl;
+
 				}
 
 				// Split the full parent internal node into half
@@ -355,11 +387,13 @@ void BTree::insert(Item data){
 						else	// parent node is not full
 						{
 							BTreeNode* tempParentNode = currentInternalNode->parentNodePtr;
-							if(tempParentNode->numKey < this->m-1 
-								&& tempParentNode->numKey >= 0)
+							if(tempParentNode->numKey >= this->m-1 
+								&& tempParentNode->numKey <= 0)
 							{
 								// Double check
 								cout << "Something is wrong here" << endl;
+								cout << tempParentNode->numKey << " >= " << this->m-1 << endl;
+								cout << tempParentNode->numKey << " <= 0" << endl; 
 							}
 							for(int i=1; i<=tempParentNode->numKey+1; i++)
 							{
@@ -374,7 +408,7 @@ void BTree::insert(Item data){
 					currentInternalNode = currentInternalNode->parentNodePtr;
 
 				}
-				cout << name << " (" << data.index << ") is inserted." << endl;
+				//cout << name << " (" << data.index << ") is inserted." << endl;
 			}
 		}
 	}
@@ -410,31 +444,31 @@ BTreeNode* BTree::getLeafNodeToInsert(Item data, BTreeNode* node)
 }
 
 
-// Find the internal node who is the parent node which the data is about to insert
-BTreeNode* BTree::getInternalNodeToInsert(Item data, BTreeNode* node)
-{
-	string name = data.name;
-	if(node != NULL && node->isLeaf != true && node->children[0]->isLeaf == false)
-	{
-		for(int i=0; i<node->numKey; i++)
-		{
-			if(name <= node->keys[i])
-			{
-				return getLeafNodeToInsert(data, node->children[i]);
-			}
-			if(name > node->keys[node->numKey-1])
-			{
-				return getLeafNodeToInsert(data, node->children[node->numKey]);
-			}
-		}
-	}
-	if(node != NULL && node->isLeaf != true && node->children[0]->isLeaf == true)
-	{
-		return node;
-	}
-	cout << "Wrong use of this function.." << endl;
-	return NULL;
-}
+// // Find the internal node who is the parent node which the data is about to insert
+// BTreeNode* BTree::getInternalNodeToInsert(Item data, BTreeNode* node)
+// {
+// 	string name = data.name;
+// 	if(node != NULL && node->isLeaf != true && node->children[0]->isLeaf == false)
+// 	{
+// 		for(int i=0; i<node->numKey; i++)
+// 		{
+// 			if(name <= node->keys[i])
+// 			{
+// 				return getLeafNodeToInsert(data, node->children[i]);
+// 			}
+// 			if(name > node->keys[node->numKey-1])
+// 			{
+// 				return getLeafNodeToInsert(data, node->children[node->numKey]);
+// 			}
+// 		}
+// 	}
+// 	if(node != NULL && node->isLeaf != true && node->children[0]->isLeaf == true)
+// 	{
+// 		return node;
+// 	}
+// 	cout << "Wrong use of this function.." << endl;
+// 	return NULL;
+// }
 
 
 // Traverse the tree to print out all nodes' values in order
@@ -479,12 +513,23 @@ BTreeNode* BTree::getRootNode()
 int BTree::getIndexToInsert(BTreeNode* leafNode, string value)
 {
 	int indexToInsert = 0;
+
 	// Find the index of the slot to insert
 	while(indexToInsert < leafNode->numKey
 			&& (leafNode->items[indexToInsert]).name < value)
 	{
+		if((leafNode->items[indexToInsert]).name == value) // Duplicate name value
+		{
+			return -1;
+		}
 		indexToInsert++;
 	}
+
+	if((leafNode->items[indexToInsert]).name == value) // Duplicate name value
+	{
+		return -1;
+	}
+
 	return indexToInsert;
 }
 
@@ -655,17 +700,24 @@ map<string, int> BTree::rangeSearchQuery(string name1, string name2, BTreeNode* 
 					resultMap.insert(tempMap.begin(), tempMap.end());
 				}
 			}
-			for(int i=0; i<node->numKey-1; i++)
+			int tempI = 0;
+			while(tempI < node->numKey)
 			{
-				if(upperName >= node->keys[i])
+				if(upperName >= node->keys[tempI])
 				{
 					map<string, int> tempMap;
-					tempMap = rangeSearchQuery(lowerName, upperName, node->children[i+1]);
+					tempMap = rangeSearchQuery(lowerName, upperName, node->children[tempI+1]);
 					if(tempMap.size() > 0)
 					{
 						resultMap.insert(tempMap.begin(), tempMap.end());
 					}
 				}
+				else
+				{
+					tempI = node->numKey;
+					// break the loop
+				}
+				tempI++;
 			}
 		}
 	}
