@@ -47,8 +47,8 @@ class BTree {
   	// Get the index in the leaf node to insert the value
   	int getIndexToInsert(BTreeNode* leafNode, string value);
   	// Find the internal node who is the parent node which the data is about to insert
-    BTreeNode* getInternalNodeToInsert(Item data, BTreeNode* node);
-    // Split this internal node into two, (and insert the new node)
+    // BTreeNode* getInternalNodeToInsert(Item data, BTreeNode* node);
+    // // Split this internal node into two, (and insert the new node)
     void splitInternalNode(BTreeNode* node, string name);
     // Get the key for the currentInternalNode at the index of i (1,2,3...)
     string getKeyToFill(BTreeNode* currentInternalNode, int keyIndex);
