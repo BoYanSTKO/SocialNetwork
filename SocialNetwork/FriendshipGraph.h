@@ -3,8 +3,9 @@
 
 #include <string.h>
 #include <iostream>
-#include "BTree.h"
+using namespace std;
 #define GRAPH_SIZE 201  // default graph size
+//#define PROFILE_DATA_PATH "/Users/boyan/Dropbox/UCSB_Class/CS130A/PJ3/SocialNetwork/SocialNetwork/ProfileData.txt"
 //#define REMOVE_INDICATOR "~~"
 
 class GraphNode {

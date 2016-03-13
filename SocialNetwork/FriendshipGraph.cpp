@@ -1,4 +1,6 @@
 #include "FriendshipGraph.h"
+#include "BTree.h"
+#include "Util.h"
 
 GraphNode::GraphNode(string name, string* friends, int friendNum, int index) {
     this->name = name;
@@ -185,12 +187,18 @@ bool FriendshipGraph::listFriendsInfo(string name) {
         return false;
     }
     else {
-        // to do
-        // needs to find information on profile data
-        
-        //
+        // if user is found, check each friend of the user
         for (int i = 0; i < nodes[hash]->getFriendNum(); i++) {
-            cout << nodes[hash]->friendNameList[i] << endl;
+            int friendHash = hashFun(nodes[hash]->friendNameList[i]);
+            while (nodes[friendHash] != NULL && nodes[friendHash]->name != nodes[hash]->friendNameList[i]) {
+                friendHash = linearProbing(friendHash);
+            }
+            if (nodes[friendHash] == NULL) {
+                cout << "Something is wrong with listFriendsInfo" << endl;
+                return false;
+            }
+            // print the friend info
+            printInfoFromProfileData(nodes[friendHash]->getIndex(), PROFILE_DATA_PATH);
         }
     }
     return true;

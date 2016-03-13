@@ -112,7 +112,7 @@ void printInfoFromProfileData(int index, string profileDataPath)
         while(std::getline(f, line))
         {
             f.seekg (0, ios_base::end);
-            int length = f.tellg();
+            long length = f.tellg();
             if(index >= length)
             {
                 cout << "Error: The input index is out of the size of the file" << endl;
@@ -145,7 +145,7 @@ void printInfoFromProfileData(int index, string profileDataPath)
                 }
                 else
                 {
-                    cout << tempName << "\t" << tempAge << "\t" << tempOccupation << endl;
+                    cout << tempName << "," << tempAge << "," << tempOccupation << endl;
                 }
                 
                 
