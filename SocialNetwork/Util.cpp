@@ -50,7 +50,7 @@ map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<st
             string tempString = names.at(i);
             pFile << tempString;
             
-            nameIndex.insert(pair<string, int>(tempString, tempIndexToInsert));
+            nameIndex.insert(pair<string, int>(tempString, initPos));
             
             tempIndexToInsert = tempIndexToInsert + 20;
             pFile.seekp(initPos + tempIndexToInsert);
@@ -156,6 +156,7 @@ void printInfoFromProfileData(int index, string profileDataPath)
     }
 }
 
+// insert users from input
 void insertUser(FriendshipGraph &g, BTree &btree, vector<string>& nameList, map<string, int> nameIndex, vector<string>& friendNameVector) {
     // insert into graph
     string* friendNameList = new string[friendNameVector.size()];
@@ -173,7 +174,7 @@ void insertUser(FriendshipGraph &g, BTree &btree, vector<string>& nameList, map<
     }
 }
 
-
+// initialize the social network with data from files
 void initializeNetwork(FriendshipGraph &g, BTree &btree, vector<string>& nameList, map<string, int> nameIndex, vector< vector<string> >& friendList) {
     // insert into graph
     for (int i=0; i < nameIndex.size(); i++) {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		70F1DB221C96190200DA6199 /* Util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 70F1DB201C96190200DA6199 /* Util.cpp */; };
 		70F4F16A1C8514D300CA4282 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 70F4F1691C8514D300CA4282 /* main.cpp */; };
 		70F4F1741C85158B00CA4282 /* BTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 70F4F1701C85158B00CA4282 /* BTree.cpp */; };
 		70F4F1751C85158B00CA4282 /* FriendshipGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 70F4F1721C85158B00CA4282 /* FriendshipGraph.cpp */; };
@@ -25,6 +26,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		70F1DB201C96190200DA6199 /* Util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Util.cpp; sourceTree = "<group>"; };
+		70F1DB211C96190200DA6199 /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
 		70F4F1661C8514D300CA4282 /* SocialNetwork */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SocialNetwork; sourceTree = BUILT_PRODUCTS_DIR; };
 		70F4F1691C8514D300CA4282 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		70F4F1701C85158B00CA4282 /* BTree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BTree.cpp; sourceTree = "<group>"; };
@@ -63,6 +66,8 @@
 		70F4F1681C8514D300CA4282 /* SocialNetwork */ = {
 			isa = PBXGroup;
 			children = (
+				70F1DB201C96190200DA6199 /* Util.cpp */,
+				70F1DB211C96190200DA6199 /* Util.h */,
 				70F4F1701C85158B00CA4282 /* BTree.cpp */,
 				70F4F1711C85158B00CA4282 /* BTree.h */,
 				70F4F1721C85158B00CA4282 /* FriendshipGraph.cpp */,
@@ -131,6 +136,7 @@
 				70F4F1741C85158B00CA4282 /* BTree.cpp in Sources */,
 				70F4F1751C85158B00CA4282 /* FriendshipGraph.cpp in Sources */,
 				70F4F16A1C8514D300CA4282 /* main.cpp in Sources */,
+				70F1DB221C96190200DA6199 /* Util.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

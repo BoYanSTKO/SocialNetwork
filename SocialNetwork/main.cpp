@@ -186,12 +186,13 @@ int main()
             }
             else if(str.compare("insert") == 0)
             {
-                cout << "here" << endl;
+//                cout << "here" << endl;
                 string name;
                 string friendString;
                 string age;
                 string occupation;
                 vector<string> friendNameVector; // friendList of one user
+                // get the input
                 cin >> name >> age >> occupation >> friendString;
                 //remove quotes from string
                 occupation.erase(remove(occupation.begin(), occupation.end(), '"'), occupation.end());
@@ -204,7 +205,12 @@ int main()
                 nameList = split(name, ',');
                 friendNameVector = split(friendString, ',');
                 
+                // write to profile data file
                 map<string, int> nameIndex = generateProfileDataFromVectors(nameList, ageList, occupationList, true, g.getNodeNum()); //append
+                
+                insertUser(g, bTree, nameList, nameIndex, friendNameVector);
+                
+                
                 // clear elements in vectors.
                 nameList.clear();
                 ageList.clear();
@@ -214,7 +220,7 @@ int main()
                 // clear map
                 nameIndex.clear();
 
-                cout << name << "," << friendString << endl;
+//                cout << name << "," << friendString << endl;
 
             }
             else if(str.compare("lookup") == 0)
