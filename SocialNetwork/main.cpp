@@ -1,46 +1,8 @@
-/*
- * Main.cpp
- *
- *  Created on: Feb 11, 2016
- *      Author: omid
- */
-
-#include <sstream>
-#include <fstream>
-#include <iostream>
-#include <vector>
-#include <string>
-#include <map>
-#include <stdio.h>
-#include <stdlib.h> 
-#include <cstring>
-
 #include "FriendshipGraph.h"
 #include "BTree.h"
-
-#define PROFILE_DATA_PATH "./ProfileData.txt"
+#include "Util.h"
 
 using namespace std;
-
-//char* stringToCharArray(string &string);
-map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<string>& ages, vector<string>& occupations);
-void printInfoFromProfileData(int index, string profileDataPath);
-void printInfoListInNameRange(BTree& bTree, string name1, string name2);
-
-
-vector<string> split(string str, char delimiter)
-{
-	vector<string> internal;
-	stringstream ss(str);       // turn the string into a stream.
-	string tok;
-
-	while(getline(ss, tok, delimiter))
-	{
-		internal.push_back(tok);
-	}
-
-	return internal;
-}
 
 int main()
 {
@@ -150,15 +112,16 @@ int main()
 	*/
 
 
-	// Test generateProfileDataFromVectors
+	// Initialization
 	vector<string> nameList;
 	vector<string> ageList;
 	vector<string> occupationList;
-	vector< vector<string> > friendsList;
-
+	vector< vector<string> > friendsList; // 2d vector, friendsList of all users
+    // read file
 	ifstream f;
 	f.open("/Users/boyan/Dropbox/UCSB_Class/CS130A/PJ3/SocialNetwork/SocialNetwork/Generated1.txt", ios::in);
 	if(!f) cerr << "File not found" << endl;
+    // copy data from the file into vectors
 	else
 	{
 		string line;
@@ -179,39 +142,104 @@ int main()
 		}
 	}
     
-//    for (int i = 0; i < friendsList.size(); i++) {
-//        string tmp = "";
-//        for (int j = 0; j < friendsList.at(i).size(); j++) {
-//            if (j != friendsList.at(i).size()-1) {
-//                tmp = tmp + friendsList.at(i).at(j) + ",";
-//            }
-//            else {
-//                tmp = tmp + friendsList.at(i).at(j);
-//            }
-//        }
-//        cout << nameList.at(i) << "," << ageList.at(i) << "," << tmp << endl;
-//    }
-
-	map<string, int> nameIndex = generateProfileDataFromVectors(nameList, ageList, occupationList);
-    
+    // create the friendship graph
     FriendshipGraph g;
-    for (int i=0; i < nameIndex.size(); i++) {
-        string* friendNameList = new string[friendsList.at(i).size()];
-        for (int j = 0; j < friendsList.at(i).size(); j++) {
-            friendNameList[j] = friendsList.at(i).at(j);
+    
+    // store <name, index> pair into a map
+	map<string, int> nameIndex = generateProfileDataFromVectors(nameList, ageList, occupationList, false, g.getNodeNum()); // do not append
+    
+    BTree bTree(5, 3);  // create the btree, m is 5, l is 3
+    
+    // initialization
+    initializeNetwork(g, bTree, nameList, nameIndex, friendsList);
+    
+    // clear elements in vectors.
+    nameList.clear();
+    ageList.clear();
+    occupationList.clear();
+    friendsList.clear();
+    
+    // clear map
+    nameIndex.clear();
+    
+    
+    try
+    {
+        while(true)
+        {
+            string str;
+            cin >> str;
+            if(cin.eof())
+            {
+                break;
+            }
+            if(str.compare("exit") == 0)
+            {
+                break;
+            }
+            else if(str.compare("addFriendship") == 0)
+            {
+                string name1;
+                string name2;
+                cin >> name1 >> name2;
+                g.addFriendship(name1, name2);
+            }
+            else if(str.compare("insert") == 0)
+            {
+                cout << "here" << endl;
+                string name;
+                string friendString;
+                string age;
+                string occupation;
+                vector<string> friendNameVector; // friendList of one user
+                cin >> name >> age >> occupation >> friendString;
+                //remove quotes from string
+                occupation.erase(remove(occupation.begin(), occupation.end(), '"'), occupation.end());
+                
+                friendString.erase(remove(friendString.begin(), friendString.end(), '"'), friendString.end());
+                
+                // copy to vector
+                ageList = split(age, ',');
+                occupationList = split(occupation, ',');
+                nameList = split(name, ',');
+                friendNameVector = split(friendString, ',');
+                
+                map<string, int> nameIndex = generateProfileDataFromVectors(nameList, ageList, occupationList, true, g.getNodeNum()); //append
+                // clear elements in vectors.
+                nameList.clear();
+                ageList.clear();
+                occupationList.clear();
+                friendNameVector.clear();
+                
+                // clear map
+                nameIndex.clear();
+
+                cout << name << "," << friendString << endl;
+
+            }
+            else if(str.compare("lookup") == 0)
+            {
+            }
+            else if(str.compare("delete") == 0)
+            {
+            }
+            else if(str.compare("print") == 0)
+            {
+                g.printAll();
+            }
+            else
+            {
+                cin.clear();
+                cout << "Inputed string format was incorrect" << endl;
+            }
         }
-        g.insert(nameList.at(i), friendNameList, (int) friendsList.at(i).size(), nameIndex[nameList[i]]);
-        
-        delete [] friendNameList;
-        friendNameList = NULL;
     }
-    
-    g.printAll();
-    
-    
-    
-    
-    
+    catch(exception& ex)
+    {
+        cerr << ex.what() << endl;
+    }
+
+
 //	map<string, int>::iterator iter;
 //	for(iter=nameIndex.begin(); iter!=nameIndex.end(); iter++)
 //	{
@@ -333,128 +361,6 @@ int main()
 // }
 
 
-// Generate the profile Data file on the disk from three vectors
-//	 return with a map of names along with corresponding entry(index) in the 
-//   Profile Data file
-map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<string>& ages, vector<string>& occupations)
-{
-	// Double check the size of the 3 input files, making sure they are of same size
-	if(names.size() != ages.size() || names.size() != occupations.size())
-	{
-		cout << "Error: size is different for the three input vectors.." << endl;
-	}
-
-	map<string, int> nameIndex;
-	
-	// FILE* pFile;
-	// pFile = fopen (PROFILE_DATA_PATH, "w");
-	ofstream pFile;
-	pFile.open(PROFILE_DATA_PATH);
-	long initPos = pFile.tellp();
-	for(int i=0; i<names.size(); i++)
-	{
-		int tempIndexToInsert = 53*i;
-		pFile.seekp(initPos + tempIndexToInsert);
-		string tempString = names.at(i);
-		pFile << tempString;
-
-		nameIndex.insert(pair<string, int>(tempString, tempIndexToInsert));
-		
-		
-		tempIndexToInsert = tempIndexToInsert+20;
-		pFile.seekp(initPos + tempIndexToInsert);
-		tempString = ages.at(i);
-		pFile << tempString;
-
-
-		tempIndexToInsert = tempIndexToInsert+3;
-		pFile.seekp(initPos + tempIndexToInsert);
-		tempString=occupations.at(i);
-		pFile << tempString;				
-	}
-	pFile.close();
-
-	return nameIndex;
-}
-
-
-// Print the name, age, and occupation of a person who is record at the index of
-//	 index in the file at profileDataPath
-void printInfoFromProfileData(int index, string profileDataPath)
-{
-	ifstream f;
-	f.open(profileDataPath.c_str(), ios::in);
-	if(!f) cerr << "Profile Data file not found" << endl;
-	else
-	{
-		string line;
-		while(std::getline(f, line))
-		{
-			f.seekg (0, ios_base::end);
-    		int length = f.tellg();
-    		if(index >= length)
-    		{
-    			cout << "Error: The input index is out of the size of the file" << endl;
-    		}
-    		else
-    		{
-				f.seekg(index, ios_base::beg);
-				//int startIndex = f.tellg();
-
-				char* buffer = new char[20];
-				f.read(buffer, 20);
-				string tempName(buffer);
-				delete[] buffer; 
-				
-				f.seekg(index+20);
-				buffer = new char[3];
-				f.read(buffer, 3);
-				string tempAge(buffer);
-				delete[] buffer; 
-
-				f.seekg(index+23);
-				buffer = new char[30];
-				f.read(buffer, 30);
-				string tempOccupation(buffer);
-
-				f.close();
-				if(tempName.length() <= 0)
-				{
-					cout << "Error: No character at the index of the file" << endl;
-				}
-				else
-				{
-					cout << tempName << "\t" << tempAge << "\t" << tempOccupation << endl;
-				}
-				
-
-				delete[] buffer;
-
-    		}
-
-			
-			
-		}
-	}
-}
-
-
-// List all users' information with names between name1 and name2
-void printInfoListInNameRange(BTree& bTree, string name1, string name2)
-{
-	if(bTree.getRootNode() != NULL)
-	{
-		cout << "The info of users with names between \"" << name1 << "\" and \"" << name2 << "\":" << endl;
-		map<string, int> nameIndexList = bTree.rangeSearchQuery(name1, name2, bTree.getRootNode());
-		map<string, int>::iterator iterQ = nameIndexList.begin();
-		for(int i=0; i<nameIndexList.size(); i++, iterQ++)
-		{
-			printInfoFromProfileData(iterQ->second, PROFILE_DATA_PATH);
-			//cout << iterQ->first << " (" << iterQ->second << ")" << endl;
-		}
-		cout << endl;
-	}
-}
 
 
 // Convert string to char array
