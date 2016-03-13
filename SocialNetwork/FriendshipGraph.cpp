@@ -65,9 +65,9 @@ int FriendshipGraph::getNodeNum() {
 int FriendshipGraph::hashFun(string name, int seed) {
     int hash = seed;
     for (int i=0; i < name.length(); i++) {
-        hash = hash * 101 + name[i];
+        hash = (hash * 101 + name[i]) % GRAPH_SIZE;
     }
-    return hash % GRAPH_SIZE;
+    return hash;
 }
 
 int FriendshipGraph::linearProbing(int hash) {
@@ -178,26 +178,36 @@ bool FriendshipGraph::addFriendship(string node1, string node2) {
 
 // list friend information of a user
 bool FriendshipGraph::listFriendsInfo(string name) {
+    cout << name << endl;
     int hash = hashFun(name);
+    cout << "init hash " << hash << endl;
     while (nodes[hash] != NULL && nodes[hash]->name != name) {
+//        cout << " here" << endl;
         hash = linearProbing(hash);
+        cout << " hash " << hash << endl;
     }
     if (nodes[hash] == NULL) {
         cout << "User not found!" << endl;
         return false;
     }
     else {
+        cout << " hash " << hash << endl;
+        cout << "here " << nodes[hash]->getIndex() << endl;
         // if user is found, check each friend of the user
         for (int i = 0; i < nodes[hash]->getFriendNum(); i++) {
+            cout << "friend " << nodes[hash]->friendNameList[i] << endl;
             int friendHash = hashFun(nodes[hash]->friendNameList[i]);
+            cout << "init friend hash " << friendHash << endl;
             while (nodes[friendHash] != NULL && nodes[friendHash]->name != nodes[hash]->friendNameList[i]) {
                 friendHash = linearProbing(friendHash);
+                cout << " friend hash " << friendHash << endl;
             }
             if (nodes[friendHash] == NULL) {
                 cout << "Something is wrong with listFriendsInfo" << endl;
                 return false;
             }
             // print the friend info
+            cout << nodes[friendHash]->getIndex() << endl;
             printInfoFromProfileData(nodes[friendHash]->getIndex(), PROFILE_DATA_PATH);
         }
     }

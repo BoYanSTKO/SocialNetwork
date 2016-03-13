@@ -223,8 +223,11 @@ int main()
 //                cout << name << "," << friendString << endl;
 
             }
-            else if(str.compare("lookup") == 0)
+            else if(str.compare("list") == 0)
             {
+                string name;
+                cin >> name;
+                g.listFriendsInfo(name);
             }
             else if(str.compare("delete") == 0)
             {
