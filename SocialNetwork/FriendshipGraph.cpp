@@ -13,9 +13,9 @@ GraphNode::GraphNode(string name, string* friends, int friendNum, int index) {
     
 }
 
-string GraphNode::getName() {
-    return this->name;
-}
+//string GraphNode::getName() {
+//    return this->name;
+//}
 
 //int GraphNode::getIndicator() {
 //    return this->indicator;
@@ -35,7 +35,7 @@ GraphNode::~GraphNode() {
 
 
 FriendshipGraph::FriendshipGraph(){
-    //set size
+    //keep track of node num
     this->nodeNum = 0;
     nodes = new GraphNode*[GRAPH_SIZE];
     for (int i = 0; i < GRAPH_SIZE; i++) {
@@ -46,9 +46,18 @@ FriendshipGraph::FriendshipGraph(){
 
 FriendshipGraph::~FriendshipGraph() {
     for (int i = 0; i < GRAPH_SIZE; i++) {
-        delete nodes[i];
+        if (nodes[i] != NULL) {
+            delete nodes[i];
+            nodes[i] = NULL;
+        }
+        
     }
     delete [] nodes;
+    nodes = NULL;
+}
+
+int FriendshipGraph::getNodeNum() {
+    return this->nodeNum;
 }
 
 int FriendshipGraph::hashFun(string name, int seed) {
@@ -66,7 +75,7 @@ int FriendshipGraph::linearProbing(int hash) {
 bool FriendshipGraph::insert(string name, string* friends, int friendNum, int index) {
     // check if the user already present
     for (int i = 0; i < GRAPH_SIZE; i++) {
-        if (nodes[i] != NULL && name == nodes[i]->getName()) {
+        if (nodes[i] != NULL && name == nodes[i]->name) {
             cout << "User already present!" << endl;
             return false;
         }
@@ -84,14 +93,16 @@ bool FriendshipGraph::insert(string name, string* friends, int friendNum, int in
 //        }
         hash = linearProbing(hash);
     }
+    
     // insert user
-    nodes[hash] = new GraphNode(name, friends, friendNum, index);
+    GraphNode* insertNode = new GraphNode(name, friends, friendNum, index);
+    nodes[hash] = insertNode;
     // increase user count
     nodeNum++;
     // change indicator
 //    nodes[hash]->indicator = OCCUPY_INDICATOR;
     
-    cout << "User " << nodes[hash]->getName() << " successfully added!" << endl;
+    cout << "User " << nodes[hash]->name<< " successfully added!" << endl;
 //    cout << nodes[hash]->getName() << endl;
 
     
@@ -104,10 +115,10 @@ bool FriendshipGraph::addFriendship(string node1, string node2) {
     int hash2 = hashFun(node2);
     
     // find out the users
-    while (nodes[hash1] != NULL && nodes[hash1]->getName() != node1) {
+    while (nodes[hash1] != NULL && nodes[hash1]->name!= node1) {
         hash1 = linearProbing(hash1);
     }
-    while (nodes[hash2] != NULL && nodes[hash2]->getName() != node2) {
+    while (nodes[hash2] != NULL && nodes[hash2]->name != node2) {
         hash2 = linearProbing(hash2);
     }
     // if the user does not exist
@@ -166,7 +177,7 @@ bool FriendshipGraph::addFriendship(string node1, string node2) {
 // list friend information of a user
 bool FriendshipGraph::listFriendsInfo(string name) {
     int hash = hashFun(name);
-    while (nodes[hash] != NULL && nodes[hash]->getName() != name) {
+    while (nodes[hash] != NULL && nodes[hash]->name != name) {
         hash = linearProbing(hash);
     }
     if (nodes[hash] == NULL) {
@@ -199,7 +210,7 @@ void FriendshipGraph::printAll() {
                     tmpFriendNameList = tmpFriendNameList + nodes[i]->friendNameList[j];
                 }
             }
-            cout << nodes[i]->getName() << "," << nodes[i]->getIndex() << "," << tmpFriendNameList << endl;
+            cout << nodes[i]->name << "," << nodes[i]->getIndex() << "," << tmpFriendNameList << endl;
 //            cout << nodes[i]->friendNum << endl;
         }
     }
