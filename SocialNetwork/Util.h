@@ -20,8 +20,11 @@
 #include <cstring>
 #include "FriendshipGraph.h"
 #include "BTree.h"
-#define PROFILE_DATA_PATH "/Users/boyan/Dropbox/UCSB_Class/CS130A/PJ3/SocialNetwork/SocialNetwork/ProfileData.txt"
+
+#define PROFILE_DATA_PATH "./ProfileData.txt"
+
 using namespace std;
+
 
 vector<string> split(string str, char delimiter);
 
@@ -32,6 +35,11 @@ void printInfoFromProfileData(int index, string profileDataPath);
 void initializeNetwork(FriendshipGraph &g, BTree &btree, vector<string>& nameList, map<string, int> nameIndex, vector< vector<string> >& friendList);
 
 void insertUser(FriendshipGraph &g, BTree &btree, vector<string>& nameList, map<string, int> nameIndex, vector<string>& friendNameVector);
+
+// List all users' information with names between name1 and name2
+void printInfoListInNameRange(BTree& bTree, string name1, string name2);
+
+void loadDataFromFile(string filePath, vector<string>& nameList, vector<string>& ageList, vector<string>& occupationList, vector< vector<string> >& frindsList);
 
 
 #endif /* Util_h */
