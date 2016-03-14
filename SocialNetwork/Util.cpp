@@ -40,14 +40,17 @@ map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<st
     // pFile = fopen (PROFILE_DATA_PATH, "w");
     ofstream pFile;
     if (append) {
-        pFile.open(PROFILE_DATA_PATH, ios_base::app);  // append to file
-        pFile.seekp(53*nodeNum);  // find the correct position to insert
+        pFile.open(PROFILE_DATA_PATH, std::ofstream::out | std::ofstream::in | std::ofstream::binary);  // append to file
+        pFile.seekp(53*(nodeNum));  // find the correct position to insert
         cout << pFile.tellp() << endl;
+        cout << 53*nodeNum << endl;
         long initPos = pFile.tellp();
+        cout << initPos << endl;
         for (int i = 0; i < names.size(); i++) {
             int tempIndexToInsert = 53*i;
             pFile.seekp(initPos + tempIndexToInsert);
             string tempString = names.at(i);
+            cout << tempString<< endl;
             pFile << tempString;
             
             nameIndex.insert(pair<string, int>(tempString, initPos));
@@ -89,10 +92,8 @@ map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<st
             pFile.seekp(initPos + tempIndexToInsert);
             tempString=occupations.at(i);
             pFile << tempString;
-//            cout << initPos << endl;
         }
     }
-    
     pFile.close();
     
     return nameIndex;
@@ -113,8 +114,7 @@ void printInfoFromProfileData(int index, string profileDataPath)
         {
             f.seekg (0, ios_base::end);
             int length = f.tellg();
-            cout << length << endl;
-            cout << "index: " << index << endl;
+            //cout << length << endl;
             if(index >= length)
             {
                 cout << "Error: The input index is out of the size of the file" << endl;
@@ -127,18 +127,23 @@ void printInfoFromProfileData(int index, string profileDataPath)
                 char* buffer = new char[20];
                 f.read(buffer, 20);
                 string tempName(buffer);
-                delete [] buffer;
-                
+                delete [] buffer;                
                 
                 f.seekg(index+20);
                 buffer = new char[3];
                 f.read(buffer, 3);
                 string tempAge(buffer);
                 delete [] buffer;
+
                 f.seekg(index+23);
                 buffer = new char[30];
                 f.read(buffer, 30);
                 string tempOccupation(buffer);
+                if(tempOccupation.at(tempOccupation.length()-1) < 'a' || tempOccupation.at(tempOccupation.length()-1) > 'z')
+                {
+                    tempOccupation.at(tempOccupation.length()-1) = ' ';
+                }
+                //cout << tempOccupation << tempOccupation.length() << endl;
                 
                 f.close();
                 if(tempName.length() <= 0)
@@ -147,18 +152,17 @@ void printInfoFromProfileData(int index, string profileDataPath)
                 }
                 else
                 {
-                    cout << tempName << "," << tempAge << "," << tempOccupation << endl;
+                    cout << tempName << "\t" << tempAge << "\t" << tempOccupation << endl;
                 }
                 
                 
-                delete[] buffer;
-                
+                delete[] buffer;                
             }			
         }
     }
 }
 
-// insert users from input
+
 void insertUser(FriendshipGraph &g, BTree &btree, vector<string>& nameList, map<string, int> nameIndex, vector<string>& friendNameVector) {
     // insert into graph
     string* friendNameList = new string[friendNameVector.size()];
@@ -176,7 +180,7 @@ void insertUser(FriendshipGraph &g, BTree &btree, vector<string>& nameList, map<
     }
 }
 
-// initialize the social network with data from files
+
 void initializeNetwork(FriendshipGraph &g, BTree &btree, vector<string>& nameList, map<string, int> nameIndex, vector< vector<string> >& friendList) {
     // insert into graph
     for (int i=0; i < nameIndex.size(); i++) {
@@ -194,7 +198,70 @@ void initializeNetwork(FriendshipGraph &g, BTree &btree, vector<string>& nameLis
     for (int i = 0; i < nameIndex.size(); i++) {
         Item userRecord = {nameList.at(i), nameIndex[nameList.at(i)]};
         btree.insert(userRecord);
-    }
-
-    
+    }   
 }
+
+// List all users' information with names between name1 and name2
+void printInfoListInNameRange(BTree& bTree, string name1, string name2)
+{   
+    if(bTree.getRootNode() != NULL)
+    {
+        if(name1 == "0" && name2 != "{")
+        {
+            cout << "The info of users with names between \"" << name1 << "\" and \"" << name2 << "\":" << endl;
+        }
+        map<string, int> nameIndexList = bTree.rangeSearchQuery(name1, name2, bTree.getRootNode());
+        map<string, int>::iterator iterQ = nameIndexList.begin();
+        for(int i=0; i<nameIndexList.size(); i++, iterQ++)
+        {
+            printInfoFromProfileData(iterQ->second, PROFILE_DATA_PATH);
+            //cout << iterQ->first << " (" << iterQ->second << ")" << endl;
+        }
+    }
+}
+
+
+// Load the data form file at filePath and put them into the vectors
+//   Also check the length of the input
+void loadDataFromFile(string filePath, vector<string>& nameList, vector<string>& ageList, vector<string>& occupationList, vector< vector<string> >& friendsList)
+{
+    ifstream f;
+    f.open(filePath.c_str(), ios::in);
+    if(!f) cerr << "File not found" << endl;
+    else
+    {
+        string line;
+        while(std::getline(f, line))
+        {
+            vector<string> words = split(line, ',');
+
+            if(words[0].length() > 20 
+                || words[1].length() > 3
+                || words[2].length() > 30)
+            {
+                cout << "Error: The length of the input is more than allowed" << endl;
+                nameList.clear();
+                ageList.clear();
+                occupationList.clear();
+                friendsList.clear();
+                return;
+            }
+            else
+            {
+                nameList.push_back(words[0]);
+                ageList.push_back(words[1]);
+                occupationList.push_back(words[2]);
+            }            
+            vector<string> tempFridends;
+            for(int i=3; i<words.size(); i++)
+            {
+                tempFridends.push_back(words[i]);
+            }
+            friendsList.push_back(tempFridends);
+        }
+    }
+    f.close();
+}
+
+
+
