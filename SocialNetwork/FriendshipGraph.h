@@ -3,9 +3,9 @@
 
 #include <string.h>
 #include <iostream>
-using namespace std;
+#include "BTree.h"
 #define GRAPH_SIZE 201  // default graph size
-//#define PROFILE_DATA_PATH "/Users/boyan/Dropbox/UCSB_Class/CS130A/PJ3/SocialNetwork/SocialNetwork/ProfileData.txt"
+
 //#define REMOVE_INDICATOR "~~"
 
 class GraphNode {
@@ -49,8 +49,9 @@ public:
     void printAll();
     bool listFriendsInfo(string name);
     bool findCommonFriends(string node1, string node2);
-    int minDist(int dist[], bool sptSet[]);
-    int degreeOfSeparation(string node1, string node2);
+	int minDist(int dist[], bool sptSet[]);
+	int degreeOfSeparation(string node1, string node2);
+
 };
 
 
