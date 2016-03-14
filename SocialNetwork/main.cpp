@@ -304,6 +304,31 @@ int main()
 						printInfoListInNameRange(theTree, "0", "{");
 						cout << endl;	
 					}
+					else if(option.compare("-c") == 0)	// List common friends
+					{
+						string name1;
+						string name2;
+						cin >> name1 >> name2;
+						cout << "Looking for the common friends between " << name1 << " and " << name2 << endl;
+						bool cFriendFound = g.findCommonFriends(name1, name2);
+						cout << endl;
+					}
+					else if(option.compare("-d") == 0)	// List Degree of Separation
+					{
+						string name1;
+						string name2;
+						cin >> name1 >> name2;
+						int dos = g.degreeOfSeparation(name1, name2);
+						if(dos == numeric_limits<int>::max())
+						{
+							cout << "The degree of separation between " << name1 << " and " << name2 << " is infinite--They are not connected in the social network." << endl;
+						}
+						else
+						{
+							cout << "The degree of separation between " << name1 << " and " << name2 << " is " << dos << endl;
+						}
+						cout << endl;
+					}
 					else if(option.compare("-u") == 0)	// List a user's info
 					{
 						string name;
