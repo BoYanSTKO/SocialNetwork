@@ -367,6 +367,7 @@ void BTree::insert(Item data){
 
 					if(currentInternalNode->parentNodePtr == NULL) // It is head!
 					{
+						//cout << "root" << endl;
 						// Create a new internal node as the head node
 						BTreeNode* newRoot = new BTreeNode(this->m, this->l, false);
 						newRoot->children[0] = currentInternalNode;
@@ -376,6 +377,7 @@ void BTree::insert(Item data){
 						newRoot->children[0]->parentNodePtr = newRoot;
 						newRoot->children[1]->parentNodePtr = newRoot;
 						this->root = newRoot;
+
 						break;
 					}
 					else
@@ -675,23 +677,35 @@ map<string, int> BTree::rangeSearchQuery(string name1, string name2, BTreeNode* 
 		lowerName = name1;
 		upperName = name2;
 	}
-
+	//cout << lowerName << " " << upperName << endl;
 	if(node != NULL)
 	{
 		if(node->isLeaf == true)
 		{
+			//cout << "leaf" << endl;
 			for(int i=0; i<node->numKey; i++)
 			{
 				if((node->items[i]).name >= lowerName 
 					&& (node->items[i]).name <= upperName)
 				{
+					//cout << (node->items[i]).name << endl; 
 					resultMap.insert( pair<string,int>((node->items[i]).name, (node->items[i]).index) );
 				}
 			}
 		}
 		else
 		{
+			//cout << "internal" << node->keys[0] << node->numKey << endl;
 			if(lowerName <= node->keys[0])
+			{
+				map<string, int> tempMap;
+				tempMap= rangeSearchQuery(lowerName, upperName, node->children[0]);
+				if(tempMap.size() > 0)
+				{
+					resultMap.insert(tempMap.begin(), tempMap.end());
+				}
+			}
+			if(node->numKey == 0)	// Only L or less items; There is only one internal node and one leaf node
 			{
 				map<string, int> tempMap;
 				tempMap= rangeSearchQuery(lowerName, upperName, node->children[0]);
