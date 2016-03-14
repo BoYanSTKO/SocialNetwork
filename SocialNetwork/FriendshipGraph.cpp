@@ -178,32 +178,46 @@ bool FriendshipGraph::addFriendship(string node1, string node2) {
 
 // list friend information of a user
 bool FriendshipGraph::listFriendsInfo(string name) {
-    cout << name << endl;
+    //cout << name << endl;
     int hash = hashFun(name);
+    //cout << "init hash " << hash << endl;
     while (nodes[hash] != NULL && nodes[hash]->name != name) {
+//        cout << " here" << endl;
         hash = linearProbing(hash);
+        //cout << " hash " << hash << endl;
     }
     if (nodes[hash] == NULL) {
+        cout << "User not found!" << endl;
         return false;
     }
     else {
+        //cout << " hash " << hash << endl;
+        //cout << "here " << nodes[hash]->getIndex() << endl;
         // if user is found, check each friend of the user
+        if(nodes[hash]->getFriendNum()>=1){
+            cout << "List the friends of " << name << ":" << endl;
+        }        
+
         for (int i = 0; i < nodes[hash]->getFriendNum(); i++) {
+            //cout << "friend " << nodes[hash]->friendNameList[i] << endl;
             int friendHash = hashFun(nodes[hash]->friendNameList[i]);
+            //cout << "init friend hash " << friendHash << endl;
             while (nodes[friendHash] != NULL && nodes[friendHash]->name != nodes[hash]->friendNameList[i]) {
                 friendHash = linearProbing(friendHash);
+                //cout << " friend hash " << friendHash << endl;
             }
             if (nodes[friendHash] == NULL) {
                 cout << "Something is wrong with listFriendsInfo" << endl;
                 return false;
             }
             // print the friend info
-//            cout << nodes[friendHash]->getIndex() << endl;
+            //cout << nodes[friendHash]->getIndex() << endl;            
             printInfoFromProfileData(nodes[friendHash]->getIndex(), PROFILE_DATA_PATH);
         }
     }
     return true;
 }
+
 
 // find common friends of two users
 bool FriendshipGraph::findCommonFriends(string node1, string node2) {
@@ -245,6 +259,7 @@ bool FriendshipGraph::findCommonFriends(string node1, string node2) {
     return true;
 }
 
+
 void FriendshipGraph::printAll() {
     for (int i = 0; i < GRAPH_SIZE; i++) {
         if (nodes[i] != NULL) {
@@ -263,3 +278,5 @@ void FriendshipGraph::printAll() {
         }
     }
 }
+
+
