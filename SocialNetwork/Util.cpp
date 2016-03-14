@@ -50,7 +50,7 @@ map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<st
             int tempIndexToInsert = 53*i;
             pFile.seekp(initPos + tempIndexToInsert);
             string tempString = names.at(i);
-            //cout << tempString<< endl;
+            cout << tempString<< endl;
             pFile << tempString;
             
             nameIndex.insert(pair<string, int>(tempString, initPos));
@@ -66,6 +66,10 @@ map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<st
             tempString=occupations.at(i);
             pFile << tempString;
             
+            pFile.seekp(initPos+53*(i+1));
+            tempString = "00";
+            pFile << tempString;
+            //cout << tempString << endl;
         }
     }
     else {
@@ -91,6 +95,10 @@ map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<st
             tempIndexToInsert = tempIndexToInsert+3;
             pFile.seekp(initPos + tempIndexToInsert);
             tempString=occupations.at(i);
+            pFile << tempString;
+
+            pFile.seekp(53*(i+1));
+            tempString = "00";
             pFile << tempString;
         }
     }
@@ -136,13 +144,15 @@ void printInfoFromProfileData(int index, string profileDataPath)
                 delete [] buffer;
 
                 f.seekg(index+23);
-                buffer = new char[30];
+                buffer = new char[30+1];
                 f.read(buffer, 30);
                 string tempOccupation(buffer);
+                //cout << tempOccupation << tempOccupation.length() << endl;
                 if((tempOccupation.at(tempOccupation.length()-1) < 'A' || tempOccupation.at(tempOccupation.length()-1) > 'Z')
                     && (tempOccupation.at(tempOccupation.length()-1) < 'a' || tempOccupation.at(tempOccupation.length()-1) > 'z'))
                 {
-                    tempOccupation.at(tempOccupation.length()-1) = ' ';
+                    //cout << tempOccupation << tempOccupation.at(tempOccupation.length()-1) << endl;
+                    tempOccupation = tempOccupation.substr(0, tempOccupation.length()-1);
                 }
                 //cout << tempOccupation << tempOccupation.length() << endl;
                 
@@ -209,12 +219,20 @@ void printInfoListInNameRange(BTree& bTree, string name1, string name2)
 {   
     if(bTree.getRootNode() != NULL)
     {
-        if(name1 == "0" && name2 != "{")
+        if(name1 != "0" && name2 != "{")
         {
             cout << "The info of users with names between \"" << name1 << "\" and \"" << name2 << "\":" << endl;
         }
         map<string, int> nameIndexList = bTree.rangeSearchQuery(name1, name2, bTree.getRootNode());
         map<string, int>::iterator iterQ = nameIndexList.begin();
+        if(nameIndexList.size() == 0 && name1 == name2)
+        {
+            cout << name1 << " is not found in the database" << endl;
+        }
+        else if(nameIndexList.size() == 0 && name1 != name2)
+        {
+            cout << "No user is found between " << name1 << " and " << name2 << endl;
+        }
         for(int i=0; i<nameIndexList.size(); i++, iterQ++)
         {
             printInfoFromProfileData(iterQ->second, PROFILE_DATA_PATH);
