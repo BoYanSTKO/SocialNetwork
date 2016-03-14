@@ -49,6 +49,8 @@ public:
     void printAll();
     bool listFriendsInfo(string name);
     bool findCommonFriends(string node1, string node2);
+    int minDist(int dist[], bool sptSet[]);
+    int degreeOfSeparation(string node1, string node2);
 };
 
 
