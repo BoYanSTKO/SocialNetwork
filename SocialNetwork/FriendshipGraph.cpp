@@ -15,9 +15,9 @@ GraphNode::GraphNode(string name, string* friends, int friendNum, int index) {
     
 }
 
-//string GraphNode::getName() {
-//    return this->name;
-//}
+string GraphNode::getName() {
+    return this->name;
+}
 
 //int GraphNode::getIndicator() {
 //    return this->indicator;
@@ -258,6 +258,88 @@ bool FriendshipGraph::findCommonFriends(string node1, string node2) {
     
     return true;
 }
+
+// find the node with min dist value, from a set of vertices not yet included in the shortest path tree (spt)
+int FriendshipGraph::minDist(int dist[], bool sptSet[]) {
+    int min = numeric_limits<int>::max(); // initialize min value to max integer
+    int min_index = -1;
+    for (int i = 0; i < GRAPH_SIZE; i++) {
+        if (sptSet[i] == false && dist[i] <= min) {
+            min = dist[i];
+            min_index = i;
+        }
+    }
+    if (min_index == -1) {
+        cout << "Something wrong with minDist()" << endl;
+    }
+    return min_index;
+}
+// find degree of separation between to users using Dijkstra’s shortest path algorithm
+int FriendshipGraph::degreeOfSeparation(string node1, string node2) {
+    
+    int dist[GRAPH_SIZE];  // store distance, dist[i] stores dist from node1 to i
+    bool sptSet[GRAPH_SIZE];  //sptSet[i] is true if node[i] is included in the spt or shortest dist from source to i is finalized
+    for (int i = 0; i < GRAPH_SIZE; i++) {
+        dist[i] = numeric_limits<int>::max();  // initialize distance with infinity
+        sptSet[i] = false;
+    }
+    // hash to find the position of node1
+    int hash1 = hashFun(node1);
+    while (nodes[hash1] != NULL && nodes[hash1]->getName() != node1) {
+        hash1 = linearProbing(hash1);
+    }
+    // if the user does not exist
+    if (nodes[hash1] == NULL) {
+        cout << node1 << " not found!" << endl;
+        return numeric_limits<int>::max();
+    }
+    // hash to find the position of node2
+    int hash2 = hashFun(node2);
+    while (nodes[hash2] != NULL && nodes[hash2]->getName() != node2) {
+        hash2 = linearProbing(hash2);
+    }
+    // if user does not exist
+    if (nodes[hash2] == NULL) {
+        cout << node2 << " not found!" << endl;
+        return numeric_limits<int>::max();
+    }
+    
+    
+    // set dist from node1 to node1 to 0
+    dist[hash1] = 0;
+    
+    for (int count = 0; count < GRAPH_SIZE - 1 ; count++) {
+        // pick the min dist node from the set of nodes not processed yet
+        int pos = minDist(dist, sptSet);
+        
+        // mark the node as processed
+        sptSet[pos] = true;
+        
+        // if position is empty, continue to the next loop
+        if (nodes[pos] == NULL) {
+            continue;
+        }
+        
+        // update the dist value of the adjacent nodes (friends) of the processed node (user)
+        for (int j = 0; j < nodes[pos]->getFriendNum(); j++) {
+            // hash to find the position of each friend
+            int tmpHash = hashFun(nodes[pos]->friendNameList[j]);
+            while (nodes[tmpHash] != NULL && nodes[tmpHash]->getName() != nodes[pos]->friendNameList[j]) {
+                tmpHash = linearProbing(tmpHash);
+            }
+            if (nodes[tmpHash] == NULL) {
+                cout << "Something is wrong with degreeOfSeparation" << endl;
+            }
+            //
+            if (!sptSet[tmpHash] && dist[pos] != numeric_limits<int>::max() && dist[pos] + 1 < dist[tmpHash]) {
+                dist[tmpHash] = dist[pos] + 1;
+            }
+        }
+    }
+
+    return dist[hash2];  // return the shortest path from node1 to node2
+}
+
 
 
 void FriendshipGraph::printAll() {
