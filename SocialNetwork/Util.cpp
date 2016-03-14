@@ -42,15 +42,15 @@ map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<st
     if (append) {
         pFile.open(PROFILE_DATA_PATH, std::ofstream::out | std::ofstream::in | std::ofstream::binary);  // append to file
         pFile.seekp(53*(nodeNum));  // find the correct position to insert
-        cout << pFile.tellp() << endl;
-        cout << 53*nodeNum << endl;
+        //cout << pFile.tellp() << endl;
+        //cout << 53*nodeNum << endl;
         long initPos = pFile.tellp();
-        cout << initPos << endl;
+        //cout << initPos << endl;
         for (int i = 0; i < names.size(); i++) {
             int tempIndexToInsert = 53*i;
             pFile.seekp(initPos + tempIndexToInsert);
             string tempString = names.at(i);
-            cout << tempString<< endl;
+            //cout << tempString<< endl;
             pFile << tempString;
             
             nameIndex.insert(pair<string, int>(tempString, initPos));
@@ -139,7 +139,8 @@ void printInfoFromProfileData(int index, string profileDataPath)
                 buffer = new char[30];
                 f.read(buffer, 30);
                 string tempOccupation(buffer);
-                if(tempOccupation.at(tempOccupation.length()-1) < 'a' || tempOccupation.at(tempOccupation.length()-1) > 'z')
+                if((tempOccupation.at(tempOccupation.length()-1) < 'A' || tempOccupation.at(tempOccupation.length()-1) > 'Z')
+                    && (tempOccupation.at(tempOccupation.length()-1) < 'a' || tempOccupation.at(tempOccupation.length()-1) > 'z'))
                 {
                     tempOccupation.at(tempOccupation.length()-1) = ' ';
                 }
@@ -169,6 +170,7 @@ void insertUser(FriendshipGraph &g, BTree &btree, vector<string>& nameList, map<
     for (int i = 0; i < friendNameVector.size(); i++) {
         friendNameList[i] = friendNameVector.at(i);
     }
+    
     g.insert(nameList.at(0), friendNameList, (int) friendNameVector.size(), nameIndex[nameList.at(0)]);
     delete [] friendNameList;
     friendNameList = NULL;
@@ -176,6 +178,7 @@ void insertUser(FriendshipGraph &g, BTree &btree, vector<string>& nameList, map<
     // insert into btree
     for (int i = 0; i < nameIndex.size(); i++) {
         Item userRecord = {nameList.at(i), nameIndex[nameList.at(i)]};
+        //cout << nameList.at(i) << nameIndex[nameList.at(i)] << endl;
         btree.insert(userRecord);
     }
 }
