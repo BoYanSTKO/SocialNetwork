@@ -48,6 +48,7 @@ public:
     bool addFriendship(string node1, string node2);
     void printAll();
     bool listFriendsInfo(string name);
+    bool findCommonFriends(string node1, string node2);
 };
 
 

@@ -180,40 +180,70 @@ bool FriendshipGraph::addFriendship(string node1, string node2) {
 bool FriendshipGraph::listFriendsInfo(string name) {
     cout << name << endl;
     int hash = hashFun(name);
-    cout << "init hash " << hash << endl;
     while (nodes[hash] != NULL && nodes[hash]->name != name) {
-//        cout << " here" << endl;
         hash = linearProbing(hash);
-        cout << " hash " << hash << endl;
     }
     if (nodes[hash] == NULL) {
-        cout << "User not found!" << endl;
         return false;
     }
     else {
-        cout << " hash " << hash << endl;
-        cout << "here " << nodes[hash]->getIndex() << endl;
         // if user is found, check each friend of the user
         for (int i = 0; i < nodes[hash]->getFriendNum(); i++) {
-            cout << "friend " << nodes[hash]->friendNameList[i] << endl;
             int friendHash = hashFun(nodes[hash]->friendNameList[i]);
-            cout << "init friend hash " << friendHash << endl;
             while (nodes[friendHash] != NULL && nodes[friendHash]->name != nodes[hash]->friendNameList[i]) {
                 friendHash = linearProbing(friendHash);
-                cout << " friend hash " << friendHash << endl;
             }
             if (nodes[friendHash] == NULL) {
                 cout << "Something is wrong with listFriendsInfo" << endl;
                 return false;
             }
             // print the friend info
-            cout << nodes[friendHash]->getIndex() << endl;
+//            cout << nodes[friendHash]->getIndex() << endl;
             printInfoFromProfileData(nodes[friendHash]->getIndex(), PROFILE_DATA_PATH);
         }
     }
     return true;
 }
 
+// find common friends of two users
+bool FriendshipGraph::findCommonFriends(string node1, string node2) {
+    int hash1 = hashFun(node1);
+    int hash2 = hashFun(node2);
+    
+    // find out the users
+    while (nodes[hash1] != NULL && nodes[hash1]->name!= node1) {
+        hash1 = linearProbing(hash1);
+    }
+    while (nodes[hash2] != NULL && nodes[hash2]->name != node2) {
+        hash2 = linearProbing(hash2);
+    }
+    // if the user does not exist
+    if (nodes[hash1] == NULL) {
+        cout << node1 << " not found!" << endl;
+        return false;
+    }
+    if (nodes[hash2] == NULL) {
+        cout << node2 << " not found!" << endl;
+        return false;
+    }
+    for (int i = 0; i < nodes[hash1]->getFriendNum(); i++) {
+        for (int j = 0; j < nodes[hash2]->getFriendNum(); j++) {
+            if (nodes[hash1]->friendNameList[i] == nodes[hash2]->friendNameList[j]) {
+                int friendHash = hashFun(nodes[hash2]->friendNameList[j]);
+                while (nodes[friendHash] != NULL && nodes[friendHash]->name != nodes[hash2]->friendNameList[j]) {
+                    friendHash = linearProbing(friendHash);
+                }
+                if (nodes[friendHash] == NULL) {
+                    cout << "Something is wrong with findCommonFriends" << endl;
+                    return false;
+                }
+                printInfoFromProfileData(nodes[friendHash]->getIndex(), PROFILE_DATA_PATH);
+            }
+        }
+    }
+    
+    return true;
+}
 
 void FriendshipGraph::printAll() {
     for (int i = 0; i < GRAPH_SIZE; i++) {
