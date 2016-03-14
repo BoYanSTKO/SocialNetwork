@@ -2,6 +2,8 @@
 #include "BTree.h"
 #include "Util.h"
 
+#include <limits>
+
 GraphNode::GraphNode(string name, string* friends, int friendNum, int index) {
     this->name = name;
     this->friendNum = friendNum;
@@ -16,7 +18,7 @@ GraphNode::GraphNode(string name, string* friends, int friendNum, int index) {
 }
 
 string GraphNode::getName() {
-    return this->name;
+   return this->name;
 }
 
 //int GraphNode::getIndicator() {
@@ -259,6 +261,7 @@ bool FriendshipGraph::findCommonFriends(string node1, string node2) {
     return true;
 }
 
+
 // find the node with min dist value, from a set of vertices not yet included in the shortest path tree (spt)
 int FriendshipGraph::minDist(int dist[], bool sptSet[]) {
     int min = numeric_limits<int>::max(); // initialize min value to max integer
@@ -274,6 +277,8 @@ int FriendshipGraph::minDist(int dist[], bool sptSet[]) {
     }
     return min_index;
 }
+
+
 // find degree of separation between to users using Dijkstra’s shortest path algorithm
 int FriendshipGraph::degreeOfSeparation(string node1, string node2) {
     
