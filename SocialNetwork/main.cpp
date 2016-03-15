@@ -22,7 +22,7 @@
 #include "Util.h"
 
 #define PROFILE_DATA_PATH "./ProfileData.txt"
-#define INPUT_DATA_PATH "./Generated1.txt"
+#define INPUT_DATA_PATH "./Generated12.txt"
 
 using namespace std;
 
@@ -32,124 +32,9 @@ using namespace std;
 // void printInfoListInNameRange(BTree& bTree, string name1, string name2);
 
 
-// vector<string> split(string str, char delimiter)
-// {
-// 	vector<string> internal;
-// 	stringstream ss(str);       // turn the string into a stream.
-// 	string tok;
-
-// 	while(getline(ss, tok, delimiter))
-// 	{
-// 		internal.push_back(tok);
-// 	}
-
-// 	return internal;
-// }
 
 int main()
 {
-	// vector<string> nameList;
-	// vector<string> ageList;
-	// vector<string> occupationList;
-	// vector< vector<string> > frindsList;
-
-	// ifstream f;
-	// f.open("./Generated4.txt", ios::in);
-	// if(!f) cerr << "File not found" << endl;
-	// else
-	// {
-	// 	string line;
-	// 	while(std::getline(f, line))
-	// 	{
-	// 		vector<string> words = split(line, ',');
-			
-	// 		nameList.push_back(words[0]);
-	// 		//ageList.push_back(atoi( words[1].c_str()));
-	// 		ageList.push_back(words[1]);
-	// 		occupationList.push_back(words[2]);
-	// 		vector<string> tempFrinds;
-	// 		for(int i=3; i<words.size(); i++)
-	// 		{
-	// 			tempFrinds.push_back(words[i]);
-	// 		}
-	// 		frindsList.push_back(tempFrinds);
-	// 	}
-	// }
-	// f.close();
-
-	// map<string, int> nameIndex = generateProfileDataFromVectors(nameList, ageList, occupationList);
-	// map<string, int>::iterator iter;
-	// for(iter=nameIndex.begin(); iter!=nameIndex.end(); iter++)
-	// {
-	// 	cout << iter->first << " (" << iter->second << ")" << endl;
-	// }
-
-	// // Create a B-Tree from the nameIndex
-	// BTree theTree = BTree::createTreeFromMap(nameIndex, 5, 3);
-	// theTree.traverse(theTree.getRootNode());
-
-	// // Range search query
-	// printInfoListInNameRange(theTree, "J", "P");
-	// cout << "done" << endl;
-
-
-
-	//printInfoFromProfileData(1325, PROFILE_DATA_PATH);
-
-
-
-	/*
-	int m = 5;
-	int l = 3;
-	
-	// Testing on BTree class
-	item item1 = {"Jerry1", 2};
-	item item2 = {"Jerry2", 4};
-	item item3 = {"Jerry3", 6};
-	item item4 = {"Derry4", 8};
-	item item5 = {"Jerry0", 10};
-	BTree bTree(5, 3);
-	bTree.insert(item1);	
-	bTree.insert(item3);
-	bTree.insert(item4);
-	bTree.insert(item2);
-	bTree.insert(item5);
-	bTree.traverse(bTree.getRootNode());
-	
-	item item6 = {"Jerry00", 12};
-	bTree.insert(item6);
-	bTree.traverse(bTree.getRootNode());
-
-	item item7 = {"Jerry23", 22};
-	item item8 = {"Jerry34", 24};
-	item item9 = {"Jerry25", 26};
-	item item10 = {"Jerry27", 27};
-	item item11 = {"Jerry01", 32};
-	item item12 = {"Jerry", 35};
-	bTree.insert(item7);
-	bTree.insert(item8);
-	bTree.insert(item9);
-	bTree.insert(item10);
-	bTree.insert(item11);
-	bTree.insert(item12);
-	bTree.traverse(bTree.getRootNode());
-	// Testing for case 3b-b
-	item item13 = {"Jerry02", 37};
-	bTree.insert(item13);
-	bTree.traverse(bTree.getRootNode());
-	*/
-
-
-
-	/*
-	// Testing for createTreeFromMap() function
-	map<string,int> testMap;
-	testMap.insert ( pair<string,int>("kelly",100) );
-	testMap.insert ( pair<string,int>("kelly1",200) );
-	BTree theTree = BTree::createTreeFromMap(testMap, 5, 3);
-	theTree.traverse(theTree.getRootNode());
-	*/
-
 	int bTree_m = 5;
 	int bTree_l = 3;
 
@@ -167,7 +52,9 @@ int main()
 				+ "query -f <name>\n"
 				+ "\tlist friends' infomation of user name\n"
 				+ "query -u <name>\n"
-				+ "\tlist a user's infomation\n"				
+				+ "\tlist a user's infomation\n"	
+				+ "print\n"
+				+ "\tprint data in the structure of B-Tree\n"			
 				+ "insert -f <name1> <name2>\n"
 				+ "\tadd a friendship relationship between two existing users name1 and name2\n"
 				+ "insert -u <name>,<age>,<occupation>\n"
@@ -351,7 +238,8 @@ int main()
 			}
 			else if(str.compare("print") == 0)
 			{
-				
+				theTree.traverse(theTree.getRootNode(), true);
+				cout << endl;
 			}
 			else
 			{
