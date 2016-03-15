@@ -47,6 +47,7 @@ void BTree::insert(Item data){
 	// Case 1: No data yet...
 	if(this->root == NULL)
 	{
+		//cout << "Case 1" << endl;
 		// Create a leaf node
 		BTreeNode* newLeafNode = new BTreeNode(this->m, this->l, true);
 		newLeafNode->items[0] = data;
@@ -64,12 +65,13 @@ void BTree::insert(Item data){
 	}
 	// Case 2: There is only one item/leaf node
 	else if(this->root->numKey == 0)	
-	{
+	{		
 		BTreeNode* itemNode = this->root->children[0];	// pointer to the item/leaf node
 		
 		// Case 2a: The data node is less than full; no need to create another data node
 		if(itemNode->numKey < this->l)	
 		{
+			//cout << "Case 2a" << endl;
 			int indexToInsert = getIndexToInsert(itemNode, name);
 			if(indexToInsert == -1)	// Duplicate insertion
 			{
@@ -90,6 +92,7 @@ void BTree::insert(Item data){
 		// Case 2b: The data node is full (numKey = l); another leaf node has to be created
 		else
 		{
+			//cout << "Case 2b" << endl;
 			//cout << "The leaf node is already full!" << endl;
 			if(itemNode->numKey != this->l)
 			{
@@ -193,6 +196,8 @@ void BTree::insert(Item data){
 			//cout << "case 3b" << endl;
 
 			BTreeNode* parentNode = leafNodeToInsert->parentNodePtr;
+			//cout << parentNode->numKey << endl;
+			//cout << "~~~" << endl;
 
 			// Case 3b-a: Parent node has less than 4 keys: still have slot to hold extra leaf node
 			if(parentNode->numKey < this->m-1)
@@ -311,7 +316,7 @@ void BTree::insert(Item data){
 				}
 				newLeafNode->nextNode = leafNodeToInsert->nextNode;
 				leafNodeToInsert->nextNode = newLeafNode;
-				//newLeafNode->parentNodePtr = parentNode;
+				newLeafNode->parentNodePtr = parentNode;
 				delete[] tempItems;
 
 				// Revise the parent internal node
