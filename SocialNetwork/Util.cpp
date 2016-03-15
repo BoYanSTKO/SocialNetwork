@@ -50,7 +50,7 @@ map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<st
             int tempIndexToInsert = 53*i;
             pFile.seekp(initPos + tempIndexToInsert);
             string tempString = names.at(i);
-            cout << tempString<< endl;
+            //cout << tempString<< endl;
             pFile << tempString;
             
             nameIndex.insert(pair<string, int>(tempString, initPos));
@@ -67,7 +67,7 @@ map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<st
             pFile << tempString;
             
             pFile.seekp(initPos+53*(i+1));
-            tempString = "00";
+            tempString = "0";
             pFile << tempString;
             //cout << tempString << endl;
         }
@@ -81,7 +81,8 @@ map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<st
             int tempIndexToInsert = 53*i;
             pFile.seekp(initPos + tempIndexToInsert);
             string tempString = names.at(i);
-            pFile << tempString;
+            //cout << tempString << endl;
+            pFile << tempString.c_str();
             
             nameIndex.insert(pair<string, int>(tempString, tempIndexToInsert));
             
@@ -98,7 +99,7 @@ map<string, int> generateProfileDataFromVectors(vector<string>& names, vector<st
             pFile << tempString;
 
             pFile.seekp(53*(i+1));
-            tempString = "00";
+            tempString = "0";
             pFile << tempString;
         }
     }
