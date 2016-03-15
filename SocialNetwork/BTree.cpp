@@ -2,6 +2,7 @@
 
 
 #include <iostream>
+#include <queue>
 
 #include "BTree.h"
 
@@ -482,29 +483,91 @@ BTreeNode* BTree::getLeafNodeToInsert(Item data, BTreeNode* node)
 void BTree::traverse(BTreeNode* node)
 {
 	//cout << "Traversing the tree..." << endl;
+	int userCounter = 0;
 	if(node == NULL)
 	{
 		cout << "This is an empty tree" << endl;
+		return;
 	}
 	else
 	{
-		if(node->isLeaf == true)
-		{	
-			Item* tempData = node->items;
-			cout << node->numKey << endl;
-			for(int i=0; i< node->numKey; i++)
-			{				
-				cout << tempData[i].name << " (" << tempData[i].index << ")\t";
-			}
-			cout << endl;
-		}
-		else
+		cout << "The data in the structure of B-Tree: " << endl;
+		queue<BTreeNode*> queue;
+		queue.push(node);
+		int tempCounter1 = 1;
+		int tempCounter2 = 0;
+
+		while(queue.empty() != true)
 		{
-			for(int i=0; i<= node->numKey; i++)
+			BTreeNode* tempNode = queue.front();
+			queue.pop();
+			tempCounter1--;
+
+			if(tempNode->isLeaf == false)
 			{
-				this->traverse(node->children[i]);
+				for(int i=0; i< tempNode->numKey; i++)
+				{
+					cout << "|" << tempNode->keys[i];
+				}
+				cout << "|\t";
+				for(int i=0; i<= tempNode->numKey; i++)
+				{
+					queue.push(tempNode->children[i]);
+				}
+				tempCounter2 += (tempNode->numKey + 1);
+				if(tempCounter1 == 0)
+				{
+					cout << endl;
+					tempCounter1 = tempCounter2;
+					tempCounter2 = 0;
+				}
 			}
-		}		
+			else
+			{
+				cout << "{";
+				for(int i=0; i< tempNode->numKey; i++)
+				{				
+					cout << "/" << (tempNode->items[i]).name << "(" << (tempNode->items[i]).index << ")";
+					userCounter++;
+				}
+				cout << "/}\t";
+			}
+			
+		}
+		cout << "\n\nNumber of users: " << userCounter << endl;
+
+		// if(node->isLeaf == true)
+		// {	
+		// 	Item* tempData = node->items;
+		// 	//cout << node->numKey << endl;
+		// 	cout << "{";
+		// 	for(int i=0; i< node->numKey; i++)
+		// 	{				
+		// 		cout << tempData[i].name << " (" << tempData[i].index << ")/";
+		// 	}
+		// 	cout << "}\t";
+		// 	if(lastNode == true)
+		// 	{
+		// 		cout << endl;
+		// 	}
+		// }
+		// else
+		// {
+		// 	for(int i=0; i< node->numKey; i++)
+		// 	{
+		// 		cout << "|" << node->keys[i];
+		// 	}
+		// 	cout << "|\t";
+		// 	if(lastNode == true)
+		// 	{
+		// 		cout << endl;
+		// 	}			
+		// 	for(int i=0; i< node->numKey; i++)
+		// 	{
+		// 		this->traverse(node->children[i], false);
+		// 	}
+		// 	this->traverse(node->children[node->numKey], true);
+		// }		
 	}
 }
 
@@ -542,17 +605,13 @@ int BTree::getIndexToInsert(BTreeNode* leafNode, string value)
 
 
 // Split this internal node into two, (and insert the new node to the parent node)
-void BTree::splitInternalNode(BTreeNode* node, string name)
-{
-	if(node->isLeaf == true || node->numKey != this->m-1)
-	{
-		cout << "Error: wrong use of this function" << endl;
-	}
-
-
-
-
-}
+// void BTree::splitInternalNode(BTreeNode* node, string name)
+// {
+// 	if(node->isLeaf == true || node->numKey != this->m-1)
+// 	{
+// 		cout << "Error: wrong use of this function" << endl;
+// 	}
+// }
 
 
 BTree::~BTree()
