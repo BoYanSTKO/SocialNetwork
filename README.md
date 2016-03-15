@@ -8,4 +8,4 @@ The implementation uses B-Tree, hash table and adjacency list. B-Tree is use to 
 * add friendship relationships between users
 * list friends' information of a user
 * check common friends of two users
-* find the degree of deparation between two users (implemented using Dijkstra's algorithm)
+* find the degree of separation between two users (implemented using Dijkstra's algorithm)
