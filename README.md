@@ -1,5 +1,5 @@
 # SocialNetwork
-The implementation uses B-Tree, hash table and adjacency list. B-Tree is use to perform range search, hash table and adjacency list are used to manage relationships between users.
+The implementation uses B-Tree, hash table and adjacency list. B-Tree is used to perform range search, while hash table and adjacency list are used to manage relationships between users.
 
 *Functionality*:
 * insert and delete users from the social network
@@ -9,3 +9,4 @@ The implementation uses B-Tree, hash table and adjacency list. B-Tree is use to 
 * list friends' information of a user
 * check common friends of two users
 * find the degree of separation between two users (implemented using Dijkstra's algorithm)
+* print data in the structure of B-Tree
