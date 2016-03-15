@@ -238,7 +238,7 @@ int main()
 			}
 			else if(str.compare("print") == 0)
 			{
-				theTree.traverse(theTree.getRootNode(), true);
+				theTree.traverse(theTree.getRootNode());
 				cout << endl;
 			}
 			else
